@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>그래프 알고리즘 의사결정 도우미</title>
+  <style>
+    :root{--bg:#f6f7fb;--panel:#fff;--text:#18212f;--muted:#667085;--line:#dfe3ea;--primary:#4f46e5;--primary-soft:#eef2ff;--ok:#067647;--warn:#b54708;--danger:#b42318;--shadow:0 14px 34px rgba(16,24,40,.08)}
+    *{box-sizing:border-box} body{margin:0;font-family:Pretendard,"Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#f8f9ff 0,#f6f7fb 34%,#f6f7fb 100%);color:var(--text)}
+    button,input,select,textarea{font:inherit} button{cursor:pointer}
+    .app{max-width:1180px;margin:0 auto;padding:24px 18px 56px}
+    header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:20px}.eyebrow{font-size:13px;font-weight:700;color:var(--primary);letter-spacing:.04em}.title{margin:6px 0 8px;font-size:clamp(26px,4vw,42px);line-height:1.18}.subtitle{margin:0;color:var(--muted);line-height:1.65;max-width:760px}.header-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 14px;border-radius:12px;font-weight:700}.btn:hover{border-color:#b8c0cc}.btn.primary{background:var(--primary);border-color:var(--primary);color:white}.btn.ghost{background:transparent}.btn:disabled{opacity:.45;cursor:not-allowed}
+    .layout{display:block}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .main{padding:22px}.side{position:fixed;top:0;right:0;z-index:40;width:min(420px,calc(100% - 28px));height:100vh;padding:20px;overflow:auto;border-radius:18px 0 0 18px;transform:translateX(105%);transition:transform .2s ease}.side.open{transform:translateX(0)}.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.drawer-close{padding:8px 11px;border-radius:10px}.drawer-backdrop{position:fixed;inset:0;z-index:35;background:rgba(16,24,40,.34);opacity:0;pointer-events:none;transition:opacity .2s ease}.drawer-backdrop.show{opacity:1;pointer-events:auto}.float-tool{position:fixed;right:20px;bottom:20px;z-index:30;border:0;background:var(--primary);color:white;padding:13px 16px;border-radius:999px;box-shadow:0 14px 30px rgba(79,70,229,.28);font-weight:800}.section-title{font-size:14px;color:var(--muted);font-weight:800;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em}
+    .progress-wrap{display:flex;gap:12px;align-items:center;margin-bottom:20px}.progress{height:9px;background:#edf0f4;border-radius:999px;overflow:hidden;flex:1}.progress>div{height:100%;background:var(--primary);width:0;transition:width .25s}.step{font-size:13px;color:var(--muted);white-space:nowrap}
+    .home{display:block}.home.hidden{display:none!important}.home-intro{margin-bottom:18px}.home-intro h2{font-size:clamp(24px,3vw,34px);line-height:1.28;margin:0 0 8px}.home-intro p{margin:0;color:var(--muted);line-height:1.6}.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}.mode-card{width:100%;text-align:left;padding:18px;border-radius:16px;border:1px solid var(--line);background:white;transition:.15s}.mode-card:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}.mode-card strong{display:block;font-size:18px;margin-bottom:7px}.mode-card span{display:block;color:var(--muted);line-height:1.5}.algo-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.algo-pick{width:100%;min-height:54px;text-align:left;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:#fbfcfe;font-weight:800}.algo-pick span{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:600;line-height:1.35}
+    .question{font-size:clamp(22px,3vw,31px);line-height:1.36;margin:0 0 9px}.hint{color:var(--muted);line-height:1.55;margin:0 0 18px}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{width:100%;height:100%;text-align:left;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:white;transition:.15s}.answer:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}.answer strong{display:block;margin-bottom:4px}.answer span{color:var(--muted);font-size:14px;line-height:1.45}
+    .nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+    .path{display:flex;gap:8px;flex-wrap:wrap}.crumb{background:#f2f4f7;border:1px solid #eaecf0;border-radius:999px;padding:6px 9px;font-size:12px;color:#475467}.empty{color:var(--muted);font-size:14px;line-height:1.55}
+    .checklist{display:grid;gap:9px}.check{display:flex;gap:9px;align-items:flex-start;font-size:14px;line-height:1.4}.check input{margin-top:3px}.memo{width:100%;min-height:128px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical;margin-top:10px;background:#fbfcfe}
+    .result{display:none}.result.show{display:block}.result-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.badge{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:800}.algo{font-size:clamp(28px,5vw,48px);margin:12px 0 6px}.confidence{font-size:14px;color:var(--ok);font-weight:800}.why{margin:18px 0 0;padding:16px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);line-height:1.65}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}.info{padding:14px;border:1px solid var(--line);border-radius:14px}.info h3{font-size:14px;margin:0 0 7px;color:var(--muted)}.info p,.info ul{margin:0;line-height:1.55}.info ul{padding-left:18px}#resultComplexity{white-space:pre-line}.examples{margin-top:14px}.example-links{display:flex;flex-wrap:wrap;gap:8px}.example-link{display:inline-flex;align-items:center;gap:7px;width:max-content;max-width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:#fbfcfe;color:var(--text);text-decoration:none}.example-link:hover{border-color:var(--primary);background:var(--primary-soft)}.example-link strong{font-size:13px}.example-link span{color:var(--muted);font-size:12px;line-height:1.35}.code{margin-top:14px;background:#111827;color:#e5e7eb;padding:16px;border-radius:14px;overflow:auto;font-size:13px;line-height:1.55;white-space:pre-wrap}.warning{margin-top:12px;padding:12px 14px;border-left:4px solid #f79009;background:#fffaeb;color:#7a2e0e;border-radius:8px;line-height:1.5}.alternatives{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.alt{padding:7px 10px;border:1px solid var(--line);border-radius:999px;font-size:13px;background:white}
+    .size-tool{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}.size-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:5px}.field input{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px}.complexity{margin-top:10px;padding:11px;border-radius:12px;background:#f8fafc;font-size:13px;line-height:1.5}
+    footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center}.hidden{display:none!important}
+    @media(max-width:820px){header{display:block}.header-actions{margin-top:14px}.grid{grid-template-columns:1fr}.app{padding:18px 12px 36px}.main{padding:18px}.mode-grid{grid-template-columns:1fr}.algo-list{grid-template-columns:repeat(2,minmax(0,1fr))}.float-tool{right:14px;bottom:14px}}
+    @media(max-width:560px){.answers,.algo-list{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <div class="eyebrow">JAVA CODING TEST · GRAPH DECISION TREE</div>
+      <h1 class="title">그래프 알고리즘 의사결정 도우미</h1>
+      <p class="subtitle">문제의 목적, 가중치, 방향성, 입력 크기, 상태 확장 여부를 순서대로 확인해 가장 가능성 높은 알고리즘을 좁힙니다.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="backBtn" disabled>이전 질문</button>
+      <button class="btn primary" id="resetBtn">처음부터</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <main class="panel main">
+      <section class="home" id="home">
+        <div class="home-intro">
+          <h2>어떻게 찾을까요?</h2>
+          <p>문제 조건을 따라가며 알고리즘을 찾거나, 이미 궁금한 알고리즘의 설명과 Java 템플릿을 바로 볼 수 있습니다.</p>
+        </div>
+        <div class="mode-grid">
+          <button class="mode-card" id="startDecisionBtn" type="button">
+            <strong>의사결정해서 알고리즘 찾기</strong>
+            <span>최소값, 전체 연결, 순서, 집합 질의, 탐색 목적을 차례대로 답하면서 후보를 좁힙니다.</span>
+          </button>
+          <button class="mode-card" id="showCatalogBtn" type="button">
+            <strong>알고리즘별 정보 보기</strong>
+            <span>Kruskal, Dijkstra, 위상 정렬처럼 원하는 알고리즘의 조건, 복잡도, Java 코드를 바로 봅니다.</span>
+          </button>
+        </div>
+        <div class="catalog-section hidden" id="catalogSection">
+          <h2 class="section-title">알고리즘 바로 보기</h2>
+          <div class="algo-list" id="algoList"></div>
+        </div>
+      </section>
+
+      <section id="quiz" class="hidden">
+        <div class="progress-wrap"><div class="progress"><div id="progressBar"></div></div><div class="step" id="stepText">1단계</div></div>
+        <h2 class="question" id="question"></h2>
+        <p class="hint" id="hint"></p>
+        <div class="answers" id="answers"></div>
+      </section>
+
+      <section class="result" id="result" aria-live="polite">
+        <div class="result-head"><div><span class="badge" id="resultCategory"></span><h2 class="algo" id="resultAlgo"></h2><div class="confidence" id="resultConfidence"></div></div></div>
+        <div class="why" id="resultWhy"></div>
+        <div class="grid">
+          <div class="info"><h3>적합한 조건</h3><ul id="resultConditions"></ul></div>
+          <div class="info"><h3>시간·공간 복잡도</h3><p id="resultComplexity"></p></div>
+          <div class="info"><h3>문제에서 찾을 표현</h3><p id="resultKeywords"></p></div>
+          <div class="info"><h3>추가 확인</h3><p id="resultCheck"></p></div>
+        </div>
+        <div class="info examples">
+          <h3>예시 문제 키워드 / 링크</h3>
+          <div class="example-links" id="resultExamples"></div>
+        </div>
+        <div class="warning hidden" id="resultWarning"></div>
+        <pre class="code" id="resultCode"></pre>
+        <div><h3 style="margin:16px 0 0;font-size:14px;color:var(--muted)">함께 검토할 후보</h3><div class="alternatives" id="alternatives"></div></div>
+        <div class="nav"><button class="btn" id="reviewBtn">판단 경로 보기</button><button class="btn primary" id="againBtn">새 문제 판단</button></div>
+      </section>
+    </main>
+
+    <aside class="panel side" id="sideDrawer" aria-label="판단 보조 도구">
+      <div class="drawer-head">
+        <h2 class="section-title">판단 보조 도구</h2>
+        <button class="drawer-close" id="closeDrawerBtn" type="button">닫기</button>
+      </div>
+
+      <h2 class="section-title">현재 판단 경로</h2>
+      <div class="path" id="path"><p class="empty">선택한 답변이 여기에 쌓입니다.</p></div>
+
+      <div class="size-tool">
+        <h2 class="section-title">입력 크기 빠른 점검</h2>
+        <div class="size-row">
+          <div class="field"><label for="nInput">N 또는 V</label><input id="nInput" type="number" min="0" placeholder="100000"></div>
+          <div class="field"><label for="mInput">M 또는 E</label><input id="mInput" type="number" min="0" placeholder="200000"></div>
+        </div>
+        <div class="complexity" id="complexityGuide">값을 입력하면 우선 고려 가능한 시간복잡도를 안내합니다.</div>
+      </div>
+
+      <div class="size-tool">
+        <h2 class="section-title">문제 읽자마자 확인</h2>
+        <div class="checklist">
+          <label class="check"><input type="checkbox"> 구해야 하는 값이 무엇인가?</label>
+          <label class="check"><input type="checkbox"> 방향/무방향인가?</label>
+          <label class="check"><input type="checkbox"> 가중치와 음수 간선이 있는가?</label>
+          <label class="check"><input type="checkbox"> 단절·사이클 가능성이 있는가?</label>
+          <label class="check"><input type="checkbox"> node 외 상태가 필요한가?</label>
+          <label class="check"><input type="checkbox"> 실제 경로 복원이 필요한가?</label>
+        </div>
+        <textarea class="memo" placeholder="문제 핵심 조건이나 반례를 메모하세요."></textarea>
+      </div>
+    </aside>
+  </div>
+  <footer>판단 결과는 문제 조건에 따른 1순위 후보입니다. 입력 제한과 예외 조건을 반드시 다시 검증하세요.</footer>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<button class="float-tool" id="openDrawerBtn" type="button">판단 도구</button>
+<script>
+const results={
+ dfsbfs:{category:'기본 그래프 탐색',algo:'DFS / BFS',confidence:'가장 먼저 검토할 후보',why:'단순 방문, 도달 가능 여부, 연결 요소 개수, 영역 탐색이 핵심이면 DFS 또는 BFS가 기본입니다.',conditions:['가중치 없는 그래프 또는 격자','최소 거리가 핵심이 아님','전체 정점·칸을 한 번씩 탐색'],complexity:'시간 O(V + E), 공간 O(V) 또는 O(V + E)',keywords:'도달할 수 있는가, 영역 개수, 연결 요소, 방문, 탐색',check:'최소 이동 횟수면 BFS를 우선하고, 깊은 재귀는 Java StackOverflowError를 주의하세요.',warning:'그래프가 단절될 수 있으면 모든 정점을 돌며 미방문 정점마다 탐색해야 합니다.',code:'Deque<Integer> queue = new ArrayDeque<>();\nqueue.offer(start);\nwhile (!queue.isEmpty()) {\n    int cur = queue.poll();\n    for (int next : graph[cur]) {\n        if (!visited[next]) {\n            visited[next] = true;\n            queue.offer(next);\n        }\n    }\n}',alts:['연결 요소','사이클 판별','이분 그래프']},
+ bfs:{category:'최단 경로',algo:'BFS',confidence:'가중치가 없거나 모두 같을 때',why:'간선 비용이 없거나 모두 동일하고 최소 이동 횟수·최소 간선 수를 구하면 BFS가 최단 거리를 보장합니다.',conditions:['가중치 없음 또는 동일 비용','최소 이동 횟수','격자 최단 거리·단계별 확산'],complexity:'시간 O(V + E), 공간 O(V)',keywords:'최소 횟수, 가장 빠른 이동, 몇 번 만에, 최단 칸 수',check:'큐에 넣는 순간 방문 처리해야 중복 삽입을 줄일 수 있습니다.',warning:'같은 위치라도 벽 파괴 여부·쿠폰 사용 여부가 다르면 visited[node][state] 형태가 필요합니다.',code:'int[] dist = new int[n + 1];\nArrays.fill(dist, -1);\nDeque<Integer> q = new ArrayDeque<>();\ndist[start] = 0;\nq.offer(start);\nwhile (!q.isEmpty()) {\n    int cur = q.poll();\n    for (int next : graph[cur]) {\n        if (dist[next] == -1) {\n            dist[next] = dist[cur] + 1;\n            q.offer(next);\n        }\n    }\n}',alts:['다중 시작점 BFS','상태 확장 BFS','0-1 BFS']},
+ zeroOne:{category:'최단 경로',algo:'0-1 BFS',confidence:'가중치가 정확히 0 또는 1일 때',why:'비용이 0인 간선은 덱 앞쪽, 비용이 1인 간선은 뒤쪽에 넣어 거리순 처리를 보장합니다.',conditions:['가중치가 0 또는 1','단일 시작점 최소 비용','Deque 사용 가능'],complexity:'시간 O(V + E), 공간 O(V)',keywords:'무료 이동/비용 1, 순간이동 0초, 벽 통과 1회 비용',check:'가중치가 0/1 외 값을 가지면 다익스트라를 사용해야 합니다.',code:'Deque<Integer> dq = new ArrayDeque<>();\nif (weight == 0) dq.offerFirst(next);\nelse dq.offerLast(next);',alts:['BFS','Dijkstra']},
+ dijkstra:{category:'최단 경로',algo:'Dijkstra',confidence:'음수 없는 가중치 그래프의 정석',why:'특정 시작점에서 다른 정점까지의 최소 비용을 구하고 모든 간선 가중치가 0 이상이면 우선순위 큐 다익스트라가 적합합니다.',conditions:['단일 시작점','가중치가 모두 0 이상','희소 그래프에 특히 효과적'],complexity:'인접 리스트 + 우선순위 큐: O((V + E) log V)',keywords:'최소 비용, 가장 싼 경로, 특정 출발점, 도로마다 비용',check:'모든 쌍 거리가 필요한지, 가중치가 음수인지 다시 확인하세요.',warning:'거리 합은 long을 우선 사용하고 오래된 PQ 항목은 continue로 건너뜁니다.',code:'PriorityQueue<Node> pq = new PriorityQueue<>((a,b) -> Long.compare(a.cost,b.cost));\nif (current.cost > dist[current.node]) continue;',alts:['0-1 BFS','Floyd-Warshall','Bellman-Ford']},
+ bellman:{category:'최단 경로',algo:'Bellman-Ford',confidence:'음수 간선 또는 음수 사이클 탐지',why:'단일 시작점 최단 거리에서 음수 간선이 존재하면 모든 간선을 V-1번 완화하는 Bellman-Ford를 검토합니다.',conditions:['음수 간선 존재','단일 시작점','음수 사이클 탐지 가능'],complexity:'시간 O(VE), 공간 O(V)',keywords:'수익/손실, 시간 감소, 음수 비용, 무한히 이득',check:'그래프가 DAG라면 위상 정렬 + DP가 더 효율적일 수 있습니다.',warning:'음수 간선이 있으면 일반 다익스트라를 사용하면 안 됩니다.',code:'for (int i = 1; i <= V; i++) {\n    for (Edge e : edges) {\n        if (dist[e.from] != INF && dist[e.to] > dist[e.from] + e.cost) {\n            dist[e.to] = dist[e.from] + e.cost;\n            if (i == V) negativeCycle = true;\n        }\n    }\n}',alts:['DAG 최단 경로','Floyd-Warshall']},
+ floyd:{category:'최단 경로',algo:'Floyd-Warshall',confidence:'모든 정점 쌍 거리 + 작은 V',why:'모든 출발점과 도착점 조합의 최소 비용이 필요하고 V가 비교적 작다면 3중 반복의 Floyd-Warshall이 명확합니다.',conditions:['모든 정점 쌍 최단 거리','V가 대체로 500 이하인지 확인','음수 사이클 없음'],complexity:'시간 O(V³), 공간 O(V²)',keywords:'모든 도시 간 거리, A→B 질의가 다수, 경유 가능',check:'N이 크면 각 시작점 다익스트라 또는 다른 구조를 검토하세요.',code:'for (int k=1;k<=n;k++)\n  for (int i=1;i<=n;i++)\n    for (int j=1;j<=n;j++)\n      dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);',alts:['반복 Dijkstra','Bellman-Ford']},
+ mst:{category:'전체 연결',algo:'MST (Kruskal / Prim)',confidence:'모든 정점을 잇는 전체 비용 최소',why:'A에서 B까지의 경로가 아니라 모든 정점이 연결되도록 선택한 간선 비용의 총합을 최소화하면 최소 신장 트리입니다.',conditions:['모든 정점을 연결','전체 간선 비용 합 최소','사이클 없이 V-1개 간선 선택'],complexity:'Kruskal O(E log E), Prim O(E log V)',keywords:'네트워크 구축, 도시 모두 연결, 최소 설치비, 전선/도로 연결',check:'간선 목록 중심이면 Kruskal, 인접 리스트 중심이면 Prim을 우선 검토하세요.',warning:'MST는 특정 두 정점 사이의 최단 경로를 보장하지 않습니다.',code:'Collections.sort(edges);\nfor (Edge e : edges) {\n    if (union(e.from, e.to)) {\n        answer += e.cost;\n        if (++count == V - 1) break;\n    }\n}',alts:['Kruskal + Union-Find','Prim + PriorityQueue']},
+ tsp:{category:'전체 방문 경로',algo:'TSP / 비트마스크 DP',confidence:'모든 정점을 방문하고 총 비용 최소',why:'모든 도시를 방문하는 하나의 경로를 만들고 시작점 복귀 또는 총 이동비 최소가 목표라면 TSP 구조입니다.',conditions:['모든 정점을 직접 방문','방문 순서가 비용에 영향','N이 작음'],complexity:'비트마스크 DP O(N²·2ᴺ), 공간 O(N·2ᴺ)',keywords:'모든 도시 한 번씩, 순회, 시작점으로 복귀, 방문 순서',check:'N≤10은 순열, N≤15~20은 비트마스크 DP를 우선 검토하세요.',warning:'N이 크면 정확한 일반 TSP 풀이는 사실상 어렵습니다.',code:'// dp[mask][cur] = mask를 방문했고 cur에 있을 때 최소 비용\nnextMask = mask | (1 << next);',alts:['순열 완전탐색','비트마스크 DP']},
+ topo:{category:'순서와 선행 관계',algo:'위상 정렬',confidence:'방향 비순환 그래프의 작업 순서',why:'선수 과목·작업 의존성처럼 선행 조건을 지키는 전체 순서를 구하면 위상 정렬이 적합합니다.',conditions:['방향 그래프','선행 관계','DAG여야 전체 정렬 가능'],complexity:'시간 O(V + E), 공간 O(V + E)',keywords:'먼저 해야 함, 선수 과목, 작업 순서, 의존성',check:'완료 최소/최대 시간이 필요하면 위상 정렬 + DP를 결합하세요.',warning:'처리한 정점 수가 V보다 작으면 사이클이 있습니다.',code:'Deque<Integer> q = new ArrayDeque<>();\nfor (int i=1;i<=n;i++) if (indegree[i]==0) q.offer(i);\nwhile (!q.isEmpty()) {\n    int cur=q.poll();\n    for (int next:graph[cur]) if (--indegree[next]==0) q.offer(next);\n}',alts:['위상 정렬 + DP','방향 사이클 판별']},
+ uf:{category:'집합 관리',algo:'Union-Find',confidence:'연결 여부를 반복 질의할 때',why:'원소를 계속 합치면서 두 원소가 같은 그룹인지 반복 확인한다면 매번 그래프 탐색보다 Union-Find가 적합합니다.',conditions:['union 연산','연결 여부 반복 질의','무방향 간선 추가 과정'],complexity:'경로 압축 + union by rank/size: 거의 O(1) 상각',keywords:'같은 집합, 친구 관계 합치기, 연결 여부 질의, 간선 추가 사이클',check:'실제 경로나 최단 거리가 필요하면 DFS/BFS 또는 최단 경로 알고리즘이 필요합니다.',code:'int find(int x){\n    if(parent[x]==x) return x;\n    return parent[x]=find(parent[x]);\n}\nboolean union(int a,int b){\n    a=find(a); b=find(b);\n    if(a==b) return false;\n    parent[b]=a; return true;\n}',alts:['Kruskal','무방향 사이클']},
+ bipartite:{category:'그래프 성질',algo:'이분 그래프 판별',confidence:'두 그룹으로 모순 없이 분할',why:'인접한 정점이 서로 다른 두 그룹에 속하도록 나눌 수 있는지 묻는다면 DFS/BFS 색칠 문제입니다.',conditions:['정점을 두 그룹으로 분할','인접 정점은 다른 그룹','홀수 사이클이 없어야 함'],complexity:'시간 O(V + E), 공간 O(V)',keywords:'두 팀, 적대 관계, 두 그룹, 인접하면 다른 편',check:'단절 그래프면 모든 미방문 정점에서 색칠을 시작해야 합니다.',code:'color[start]=1;\n// next가 미방문이면 -color[cur], 같은 색이면 실패',alts:['BFS 색칠','DFS 색칠']},
+ cycle:{category:'그래프 성질',algo:'사이클 판별',confidence:'방향성에 따라 구현이 달라짐',why:'사이클 존재 여부가 목표면 무방향은 DFS+parent 또는 Union-Find, 방향은 DFS 3상태 또는 위상 정렬을 사용합니다.',conditions:['순환 구조 확인','방향/무방향 구분 필수'],complexity:'DFS 방식 O(V + E), Union-Find 거의 O(E α(V))',keywords:'순환, 다시 돌아옴, 간선 추가 시 최초 사이클',check:'간선을 순서대로 추가하면 Union-Find, 전체 그래프 탐색이면 DFS가 자연스럽습니다.',code:'// 방향 그래프: 0 미방문, 1 현재 경로, 2 완료\nif (state[next] == 1) return true;',alts:['DFS + parent','Union-Find','위상 정렬']},
+ scc:{category:'방향 그래프 그룹화',algo:'SCC',confidence:'서로 왕복 가능한 정점 묶기',why:'방향 그래프에서 A→B와 B→A가 모두 가능한 정점들을 하나의 그룹으로 묶으면 강한 연결 요소입니다.',conditions:['방향 그래프','상호 도달 가능','그룹 압축 후 DAG 활용 가능'],complexity:'Kosaraju/Tarjan 모두 O(V + E)',keywords:'서로 오갈 수 있음, 강하게 연결, 2-SAT, 그룹 압축',check:'단순 연결 요소와 달리 방향을 고려한 왕복 가능성이 핵심입니다.',code:'// Tarjan: discovery order + low-link\n// Kosaraju: 종료 순서 DFS + 역그래프 DFS',alts:['Tarjan','Kosaraju']},
+ bridge:{category:'연결 안정성',algo:'브리지 / 단절점',confidence:'제거 시 그래프가 분리되는 핵심 요소',why:'특정 간선이나 정점을 제거했을 때 연결 요소 수가 증가하는지 찾으면 low-link 기반 DFS 문제입니다.',conditions:['제거 전후 연결성 변화','핵심 도로/서버/정점 탐색','무방향 그래프가 일반적'],complexity:'시간 O(V + E)',keywords:'끊으면 분리, 반드시 지나야 함, 핵심 연결',check:'DFS 방문 순서와 자식이 도달 가능한 가장 이른 정점(low)을 관리해야 합니다.',code:'// tree edge (cur,next)가 bridge 조건\nif (order[cur] < low[next]) bridge;',alts:['브리지','단절점']},
+ flow:{category:'네트워크 최적화',algo:'최대 유량',confidence:'용량 제한 내 최대 전달량',why:'각 간선의 용량 제한을 지키면서 출발점에서 도착점까지 최대한 많이 보내는 문제입니다.',conditions:['source와 sink','간선 용량','잔여 그래프'],complexity:'Edmonds-Karp O(VE²), Dinic 일반적으로 O(V²E)',keywords:'최대 전송량, 용량, 최소 컷, 공급',check:'단순 최단 경로가 아니라 동시에 흘릴 수 있는 양의 합을 구하는지 확인하세요.',code:'// residual capacity가 있는 경로를 반복적으로 찾아 유량 증가',alts:['Dinic','Edmonds-Karp','최소 컷']},
+ matching:{category:'매칭',algo:'이분 매칭',confidence:'두 그룹 사이 최대 짝짓기',why:'왼쪽 그룹과 오른쪽 그룹 사이 가능한 연결 중 서로 겹치지 않는 최대 쌍을 만들면 이분 매칭입니다.',conditions:['두 종류의 집합','한 원소당 최대 한 쌍','가능한 매칭 수 최대화'],complexity:'DFS 기반 O(VE), Hopcroft-Karp O(E√V)',keywords:'사람-업무, 학생-프로젝트, 직원-자리, 최대 배정',check:'가중치가 있는 최적 매칭이면 헝가리안 등 다른 알고리즘이 필요할 수 있습니다.',code:'// match[right]를 두고 augmenting path 탐색',alts:['DFS 이분 매칭','Hopcroft-Karp','최대 유량 변환']},
+ tree:{category:'트리',algo:'트리 DFS/BFS · 트리 DP · LCA',confidence:'연결 + 간선 V-1이면 트리',why:'연결 그래프이며 간선 수가 V-1이면 사이클이 없는 트리이므로 경로가 유일하다는 성질을 활용합니다.',conditions:['연결 그래프','간선 수 V-1','두 정점 사이 경로 하나'],complexity:'기본 순회 O(V), LCA 전처리 O(V log V)',keywords:'부모, 서브트리, 트리 지름, 공통 조상, 계층',check:'질문이 부모/거리/서브트리/공통 조상 중 무엇인지에 따라 세부 알고리즘을 고르세요.',code:'// parent[next] = cur; depth[next] = depth[cur] + 1;',alts:['트리 지름','트리 DP','LCA']},
+ state:{category:'상태 확장',algo:'상태 확장 BFS / Dijkstra / DP',confidence:'같은 정점에서도 상황에 따라 미래가 달라짐',why:'위치가 같아도 사용한 쿠폰, 부순 벽, 남은 연료, 방문 집합 등에 따라 이후 선택이 달라지면 상태를 차원에 포함해야 합니다.',conditions:['node만으로 상태 표현 불충분','보유 자원·이전 선택이 중요','다차원 visited/dist 필요'],complexity:'기본 알고리즘 복잡도 × 상태 개수',keywords:'한 번만 사용, 최대 K회, 벽 파괴, 쿠폰, 연료, 방문 집합',check:'상태 수의 곱이 메모리·시간 제한을 넘지 않는지 계산하세요.',warning:'visited[node] 하나로 처리하면 다른 상태의 더 좋은 경로를 잘못 제거할 수 있습니다.',code:'boolean[][] visited = new boolean[n][stateCount];\nlong[][] dist = new long[n][stateCount];',alts:['BFS + 상태','Dijkstra + 상태','비트마스크 DP']}
+};
+
+const codeExamples={
+dfsbfs:`// DFS/BFS 기본 탐색 + 연결 요소 개수
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n, m;
+    static List<Integer>[] graph;
+    static boolean[] visited;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a); // 방향 그래프면 이 줄 제거
+        }
+
+        visited = new boolean[n + 1];
+        int components = 0;
+
+        for (int i = 1; i <= n; i++) {
+            if (!visited[i]) {
+                bfs(i);
+                // dfsRecursive(i); 또는 dfsIterative(i); 로 바꿔도 됨
+                components++;
+            }
+        }
+
+        System.out.println(components);
+    }
+
+    static void bfs(int start) {
+        Deque<Integer> q = new ArrayDeque<>();
+        visited[start] = true;
+        q.offer(start);
+
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int next : graph[cur]) {
+                if (visited[next]) continue;
+                visited[next] = true;
+                q.offer(next);
+            }
+        }
+    }
+
+    static void dfsRecursive(int cur) {
+        visited[cur] = true;
+        for (int next : graph[cur]) {
+            if (!visited[next]) dfsRecursive(next);
+        }
+    }
+
+    static void dfsIterative(int start) {
+        Deque<Integer> stack = new ArrayDeque<>();
+        visited[start] = true;
+        stack.push(start);
+
+        while (!stack.isEmpty()) {
+            int cur = stack.pop();
+            for (int next : graph[cur]) {
+                if (visited[next]) continue;
+                visited[next] = true;
+                stack.push(next);
+            }
+        }
+    }
+}`,
+bfs:`// 무가중치 최단 거리 BFS
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n, m, start;
+    static List<Integer>[] graph;
+    static int[] dist;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        start = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a); // 방향 그래프면 제거
+        }
+
+        dist = new int[n + 1];
+        Arrays.fill(dist, -1);
+        bfs(start);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= n; i++) sb.append(dist[i]).append('\\n');
+        System.out.print(sb);
+    }
+
+    static void bfs(int start) {
+        Deque<Integer> q = new ArrayDeque<>();
+        dist[start] = 0;
+        q.offer(start);
+
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int next : graph[cur]) {
+                if (dist[next] != -1) continue;
+                dist[next] = dist[cur] + 1;
+                q.offer(next);
+            }
+        }
+    }
+}`,
+zeroOne:`// 0-1 BFS: 간선 가중치가 0 또는 1
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge {
+        int to, cost;
+        Edge(int to, int cost) {
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
+    static final int INF = 1_000_000_000;
+    static int n, m, start;
+    static List<Edge>[] graph;
+    static int[] dist;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        start = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken()); // 반드시 0 또는 1
+            graph[from].add(new Edge(to, cost));
+        }
+
+        dist = new int[n + 1];
+        Arrays.fill(dist, INF);
+        zeroOneBfs(start);
+
+        System.out.println(dist[n] == INF ? -1 : dist[n]);
+    }
+
+    static void zeroOneBfs(int start) {
+        Deque<Integer> dq = new ArrayDeque<>();
+        dist[start] = 0;
+        dq.offer(start);
+
+        while (!dq.isEmpty()) {
+            int cur = dq.pollFirst();
+            for (Edge e : graph[cur]) {
+                int nextCost = dist[cur] + e.cost;
+                if (dist[e.to] <= nextCost) continue;
+
+                dist[e.to] = nextCost;
+                if (e.cost == 0) dq.offerFirst(e.to);
+                else dq.offerLast(e.to);
+            }
+        }
+    }
+}`,
+dijkstra:`// Dijkstra: 음수 없는 가중치 그래프 단일 시작점 최단 거리
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Node implements Comparable<Node> {
+        int end;
+        long weight;
+
+        Node(int end, long weight) {
+            this.end = end;
+            this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(Node other) {
+            return Long.compare(this.weight, other.weight);
+        }
+    }
+
+    static final long INF = Long.MAX_VALUE / 4;
+    static int n, m, start;
+    static List<Node>[] graph;
+    static long[] dist;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        start = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            long cost = Long.parseLong(st.nextToken());
+            graph[from].add(new Node(to, cost));
+        }
+
+        dist = new long[n + 1];
+        Arrays.fill(dist, INF);
+        dijkstra(start);
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= n; i++) {
+            sb.append(dist[i] == INF ? "INF" : dist[i]).append('\\n');
+        }
+        System.out.print(sb);
+    }
+
+    static void dijkstra(int start) {
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        dist[start] = 0;
+        pq.offer(new Node(start, 0));
+
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
+            if (cur.weight > dist[cur.end]) continue;
+
+            for (Node next : graph[cur.end]) {
+                long nextCost = cur.weight + next.weight;
+                if (dist[next.end] <= nextCost) continue;
+
+                dist[next.end] = nextCost;
+                pq.offer(new Node(next.end, nextCost));
+            }
+        }
+    }
+}`,
+bellman:`// Bellman-Ford: 음수 간선 + 음수 사이클 탐지
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge {
+        int from, to;
+        long cost;
+        Edge(int from, int to, long cost) {
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
+        }
+    }
+
+    static final long INF = Long.MAX_VALUE / 4;
+    static int n, m, start;
+    static List<Edge> edges = new ArrayList<>();
+    static long[] dist;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        start = Integer.parseInt(st.nextToken());
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            long cost = Long.parseLong(st.nextToken());
+            edges.add(new Edge(from, to, cost));
+        }
+
+        dist = new long[n + 1];
+        Arrays.fill(dist, INF);
+
+        boolean hasNegativeCycle = bellmanFord(start);
+        if (hasNegativeCycle) {
+            System.out.println("NEGATIVE CYCLE");
+            return;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            System.out.println(dist[i] == INF ? "INF" : dist[i]);
+        }
+    }
+
+    static boolean bellmanFord(int start) {
+        dist[start] = 0;
+
+        for (int i = 1; i <= n; i++) {
+            boolean updated = false;
+
+            for (Edge e : edges) {
+                if (dist[e.from] == INF) continue;
+                if (dist[e.to] > dist[e.from] + e.cost) {
+                    dist[e.to] = dist[e.from] + e.cost;
+                    updated = true;
+
+                    if (i == n) return true;
+                }
+            }
+
+            if (!updated) break;
+        }
+
+        return false;
+    }
+}`,
+floyd:`// Floyd-Warshall: 모든 정점 쌍 최단 거리
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static final long INF = Long.MAX_VALUE / 4;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        long[][] dist = new long[n + 1][n + 1];
+        for (int i = 1; i <= n; i++) {
+            Arrays.fill(dist[i], INF);
+            dist[i][i] = 0;
+        }
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            long cost = Long.parseLong(st.nextToken());
+            dist[from][to] = Math.min(dist[from][to], cost);
+        }
+
+        for (int k = 1; k <= n; k++) {
+            for (int i = 1; i <= n; i++) {
+                if (dist[i][k] == INF) continue;
+                for (int j = 1; j <= n; j++) {
+                    if (dist[k][j] == INF) continue;
+                    dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                sb.append(dist[i][j] == INF ? 0 : dist[i][j]).append(' ');
+            }
+            sb.append('\\n');
+        }
+        System.out.print(sb);
+    }
+}`,
+mst:`// Kruskal MST: 간선 정렬 + Union-Find 전체 코드
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge implements Comparable<Edge> {
+        int from, to;
+        long cost;
+        Edge(int from, int to, long cost) {
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
+        }
+        public int compareTo(Edge other) {
+            return Long.compare(this.cost, other.cost);
+        }
+    }
+
+    static int[] parent, size;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int v = Integer.parseInt(st.nextToken());
+        int e = Integer.parseInt(st.nextToken());
+
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < e; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            long c = Long.parseLong(st.nextToken());
+            edges.add(new Edge(a, b, c));
+        }
+
+        parent = new int[v + 1];
+        size = new int[v + 1];
+        for (int i = 1; i <= v; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+
+        Collections.sort(edges);
+
+        long answer = 0;
+        int selected = 0;
+        for (Edge edge : edges) {
+            if (!union(edge.from, edge.to)) continue;
+            answer += edge.cost;
+            selected++;
+            if (selected == v - 1) break;
+        }
+
+        if (selected != v - 1) {
+            System.out.println("IMPOSSIBLE"); // 그래프가 연결되지 않음
+        } else {
+            System.out.println(answer);
+        }
+    }
+
+    static int find(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    static boolean union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+        if (rootA == rootB) return false;
+
+        if (size[rootA] < size[rootB]) {
+            int temp = rootA;
+            rootA = rootB;
+            rootB = temp;
+        }
+        parent[rootB] = rootA;
+        size[rootA] += size[rootB];
+        return true;
+    }
+}`,
+tsp:`// TSP 비트마스크 DP: 모든 도시 방문 후 시작점 복귀
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static final long INF = Long.MAX_VALUE / 4;
+    static int n;
+    static long[][] cost;
+    static long[][] dp;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+        cost = new long[n][n];
+
+        for (int i = 0; i < n; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < n; j++) {
+                cost[i][j] = Long.parseLong(st.nextToken());
+            }
+        }
+
+        int fullMask = (1 << n) - 1;
+        dp = new long[1 << n][n];
+        for (long[] row : dp) Arrays.fill(row, -1);
+
+        long answer = tsp(1, 0, fullMask); // 0번 도시에서 시작
+        System.out.println(answer >= INF ? -1 : answer);
+    }
+
+    static long tsp(int mask, int cur, int fullMask) {
+        if (mask == fullMask) {
+            return cost[cur][0] == 0 ? INF : cost[cur][0];
+        }
+
+        if (dp[mask][cur] != -1) return dp[mask][cur];
+
+        long best = INF;
+        for (int next = 0; next < n; next++) {
+            if ((mask & (1 << next)) != 0) continue;
+            if (cost[cur][next] == 0) continue;
+            best = Math.min(best, cost[cur][next] + tsp(mask | (1 << next), next, fullMask));
+        }
+
+        return dp[mask][cur] = best;
+    }
+}`,
+topo:`// 위상 정렬: Kahn 알고리즘 + 사이클 판별
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        List<Integer>[] graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+        int[] indegree = new int[n + 1];
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int before = Integer.parseInt(st.nextToken());
+            int after = Integer.parseInt(st.nextToken());
+            graph[before].add(after);
+            indegree[after]++;
+        }
+
+        Deque<Integer> q = new ArrayDeque<>();
+        for (int i = 1; i <= n; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+
+        List<Integer> order = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            order.add(cur);
+
+            for (int next : graph[cur]) {
+                indegree[next]--;
+                if (indegree[next] == 0) q.offer(next);
+            }
+        }
+
+        if (order.size() != n) {
+            System.out.println("CYCLE");
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (int x : order) sb.append(x).append(' ');
+            System.out.println(sb);
+        }
+    }
+}`,
+uf:`// Union-Find: 연결 여부 질의 + 집합 병합
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int[] parent, size;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int q = Integer.parseInt(st.nextToken());
+
+        parent = new int[n + 1];
+        size = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < q; i++) {
+            st = new StringTokenizer(br.readLine());
+            int type = Integer.parseInt(st.nextToken()); // 0 union, 1 same?
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            if (type == 0) {
+                union(a, b);
+            } else {
+                sb.append(find(a) == find(b) ? "YES" : "NO").append('\\n');
+            }
+        }
+
+        System.out.print(sb);
+    }
+
+    static int find(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    static boolean union(int a, int b) {
+        int rootA = find(a);
+        int rootB = find(b);
+        if (rootA == rootB) return false;
+
+        if (size[rootA] < size[rootB]) {
+            int temp = rootA;
+            rootA = rootB;
+            rootB = temp;
+        }
+        parent[rootB] = rootA;
+        size[rootA] += size[rootB];
+        return true;
+    }
+}`,
+bipartite:`// 이분 그래프 판별: BFS 색칠
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n, m;
+    static List<Integer>[] graph;
+    static int[] color; // 0 미방문, 1 / -1 두 그룹
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
+        }
+
+        color = new int[n + 1];
+        boolean ok = true;
+        for (int i = 1; i <= n; i++) {
+            if (color[i] == 0 && !bfs(i)) {
+                ok = false;
+                break;
+            }
+        }
+
+        System.out.println(ok ? "YES" : "NO");
+    }
+
+    static boolean bfs(int start) {
+        Deque<Integer> q = new ArrayDeque<>();
+        color[start] = 1;
+        q.offer(start);
+
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (int next : graph[cur]) {
+                if (color[next] == 0) {
+                    color[next] = -color[cur];
+                    q.offer(next);
+                } else if (color[next] == color[cur]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}`,
+cycle:`// 사이클 판별 템플릿: 방향 DFS 3상태 + 무방향 Union-Find 참고
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n, m;
+    static List<Integer>[] graph;
+    static int[] state; // 0 미방문, 1 현재 DFS 경로, 2 탐색 완료
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            graph[from].add(to);
+        }
+
+        state = new int[n + 1];
+        boolean hasCycle = false;
+        for (int i = 1; i <= n; i++) {
+            if (state[i] == 0 && dfsDirected(i)) {
+                hasCycle = true;
+                break;
+            }
+        }
+
+        System.out.println(hasCycle ? "CYCLE" : "NO CYCLE");
+    }
+
+    static boolean dfsDirected(int cur) {
+        state[cur] = 1;
+
+        for (int next : graph[cur]) {
+            if (state[next] == 1) return true;
+            if (state[next] == 0 && dfsDirected(next)) return true;
+        }
+
+        state[cur] = 2;
+        return false;
+    }
+
+    // 무방향 그래프는 DFS + parent 또는 Union-Find:
+    // 이미 방문한 인접 정점이 parent가 아니면 사이클.
+    // 간선을 하나씩 추가할 때 union(a, b)가 false면 사이클.
+}`,
+scc:`// Tarjan SCC: 강한 연결 요소
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n, m, order;
+    static List<Integer>[] graph;
+    static int[] discovered;
+    static boolean[] finished;
+    static Deque<Integer> stack = new ArrayDeque<>();
+    static List<List<Integer>> sccList = new ArrayList<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            graph[from].add(to);
+        }
+
+        discovered = new int[n + 1];
+        finished = new boolean[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            if (discovered[i] == 0) dfs(i);
+        }
+
+        System.out.println(sccList.size());
+    }
+
+    static int dfs(int cur) {
+        discovered[cur] = ++order;
+        stack.push(cur);
+        int low = discovered[cur];
+
+        for (int next : graph[cur]) {
+            if (discovered[next] == 0) {
+                low = Math.min(low, dfs(next));
+            } else if (!finished[next]) {
+                low = Math.min(low, discovered[next]);
+            }
+        }
+
+        if (low == discovered[cur]) {
+            List<Integer> scc = new ArrayList<>();
+            while (true) {
+                int node = stack.pop();
+                finished[node] = true;
+                scc.add(node);
+                if (node == cur) break;
+            }
+            sccList.add(scc);
+        }
+
+        return low;
+    }
+}`,
+bridge:`// 브리지 찾기: DFS order + low-link
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class EdgeResult implements Comparable<EdgeResult> {
+        int a, b;
+        EdgeResult(int a, int b) {
+            this.a = Math.min(a, b);
+            this.b = Math.max(a, b);
+        }
+        public int compareTo(EdgeResult other) {
+            if (this.a != other.a) return this.a - other.a;
+            return this.b - other.b;
+        }
+    }
+
+    static int n, m, order;
+    static List<Integer>[] graph;
+    static int[] visitOrder;
+    static List<EdgeResult> bridges = new ArrayList<>();
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph[a].add(b);
+            graph[b].add(a);
+        }
+
+        visitOrder = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            if (visitOrder[i] == 0) dfs(i, 0);
+        }
+
+        Collections.sort(bridges);
+        System.out.println(bridges.size());
+        for (EdgeResult e : bridges) {
+            System.out.println(e.a + " " + e.b);
+        }
+    }
+
+    static int dfs(int cur, int parent) {
+        visitOrder[cur] = ++order;
+        int low = visitOrder[cur];
+
+        for (int next : graph[cur]) {
+            if (next == parent) continue;
+
+            if (visitOrder[next] == 0) {
+                int childLow = dfs(next, cur);
+                if (childLow > visitOrder[cur]) {
+                    bridges.add(new EdgeResult(cur, next));
+                }
+                low = Math.min(low, childLow);
+            } else {
+                low = Math.min(low, visitOrder[next]);
+            }
+        }
+
+        return low;
+    }
+}`,
+flow:`// Dinic 최대 유량
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class Edge {
+        int to, rev;
+        long cap;
+        Edge(int to, int rev, long cap) {
+            this.to = to;
+            this.rev = rev;
+            this.cap = cap;
+        }
+    }
+
+    static int n, m, source, sink;
+    static List<Edge>[] graph;
+    static int[] level, work;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        source = Integer.parseInt(st.nextToken());
+        sink = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            st = new StringTokenizer(br.readLine());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            long cap = Long.parseLong(st.nextToken());
+            addEdge(from, to, cap);
+        }
+
+        level = new int[n + 1];
+        work = new int[n + 1];
+        System.out.println(maxFlow());
+    }
+
+    static void addEdge(int from, int to, long cap) {
+        Edge forward = new Edge(to, graph[to].size(), cap);
+        Edge backward = new Edge(from, graph[from].size(), 0);
+        graph[from].add(forward);
+        graph[to].add(backward);
+    }
+
+    static boolean bfs() {
+        Arrays.fill(level, -1);
+        Deque<Integer> q = new ArrayDeque<>();
+        level[source] = 0;
+        q.offer(source);
+
+        while (!q.isEmpty()) {
+            int cur = q.poll();
+            for (Edge e : graph[cur]) {
+                if (e.cap > 0 && level[e.to] == -1) {
+                    level[e.to] = level[cur] + 1;
+                    q.offer(e.to);
+                }
+            }
+        }
+        return level[sink] != -1;
+    }
+
+    static long dfs(int cur, long flow) {
+        if (cur == sink) return flow;
+
+        for (; work[cur] < graph[cur].size(); work[cur]++) {
+            Edge e = graph[cur].get(work[cur]);
+            if (e.cap <= 0 || level[e.to] != level[cur] + 1) continue;
+
+            long pushed = dfs(e.to, Math.min(flow, e.cap));
+            if (pushed > 0) {
+                e.cap -= pushed;
+                graph[e.to].get(e.rev).cap += pushed;
+                return pushed;
+            }
+        }
+        return 0;
+    }
+
+    static long maxFlow() {
+        long total = 0;
+        while (bfs()) {
+            Arrays.fill(work, 0);
+            long flow;
+            while ((flow = dfs(source, Long.MAX_VALUE / 4)) > 0) {
+                total += flow;
+            }
+        }
+        return total;
+    }
+}`,
+matching:`// DFS 기반 이분 매칭: 왼쪽 1..N, 오른쪽 1..M
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int leftSize, rightSize, edgeCount;
+    static List<Integer>[] graph;
+    static int[] matchedRight;
+    static boolean[] visited;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        leftSize = Integer.parseInt(st.nextToken());
+        rightSize = Integer.parseInt(st.nextToken());
+        edgeCount = Integer.parseInt(st.nextToken());
+
+        graph = new ArrayList[leftSize + 1];
+        for (int i = 1; i <= leftSize; i++) graph[i] = new ArrayList<>();
+
+        for (int i = 0; i < edgeCount; i++) {
+            st = new StringTokenizer(br.readLine());
+            int left = Integer.parseInt(st.nextToken());
+            int right = Integer.parseInt(st.nextToken());
+            graph[left].add(right);
+        }
+
+        matchedRight = new int[rightSize + 1];
+        int matchCount = 0;
+
+        for (int left = 1; left <= leftSize; left++) {
+            visited = new boolean[rightSize + 1];
+            if (dfs(left)) matchCount++;
+        }
+
+        System.out.println(matchCount);
+    }
+
+    static boolean dfs(int left) {
+        for (int right : graph[left]) {
+            if (visited[right]) continue;
+            visited[right] = true;
+
+            if (matchedRight[right] == 0 || dfs(matchedRight[right])) {
+                matchedRight[right] = left;
+                return true;
+            }
+        }
+        return false;
+    }
+}`,
+tree:`// 트리 기본 템플릿: 부모, 깊이, 서브트리 크기
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static int n;
+    static List<Integer>[] tree;
+    static int[] parent, depth, subtreeSize;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        n = Integer.parseInt(br.readLine());
+
+        tree = new ArrayList[n + 1];
+        for (int i = 1; i <= n; i++) tree[i] = new ArrayList<>();
+
+        for (int i = 0; i < n - 1; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            tree[a].add(b);
+            tree[b].add(a);
+        }
+
+        parent = new int[n + 1];
+        depth = new int[n + 1];
+        subtreeSize = new int[n + 1];
+
+        dfs(1, 0);
+        System.out.println(subtreeSize[1]);
+    }
+
+    static void dfs(int cur, int prev) {
+        parent[cur] = prev;
+        subtreeSize[cur] = 1;
+
+        for (int next : tree[cur]) {
+            if (next == prev) continue;
+            depth[next] = depth[cur] + 1;
+            dfs(next, cur);
+            subtreeSize[cur] += subtreeSize[next];
+        }
+    }
+}`,
+state:`// 상태 확장 BFS 예시: 격자에서 벽을 최대 1번 부수고 최단 거리
+import java.io.*;
+import java.util.*;
+
+public class Main {
+    static class State {
+        int r, c, broken;
+        State(int r, int c, int broken) {
+            this.r = r;
+            this.c = c;
+            this.broken = broken;
+        }
+    }
+
+    static int n, m;
+    static int[][] map;
+    static int[][][] dist; // dist[row][col][벽을 부쉈는가]
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, -1, 1};
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+
+        map = new int[n][m];
+        for (int r = 0; r < n; r++) {
+            String line = br.readLine();
+            for (int c = 0; c < m; c++) {
+                map[r][c] = line.charAt(c) - '0';
+            }
+        }
+
+        dist = new int[n][m][2];
+        int answer = bfs();
+        System.out.println(answer);
+    }
+
+    static int bfs() {
+        Deque<State> q = new ArrayDeque<>();
+        dist[0][0][0] = 1;
+        q.offer(new State(0, 0, 0));
+
+        while (!q.isEmpty()) {
+            State cur = q.poll();
+            if (cur.r == n - 1 && cur.c == m - 1) {
+                return dist[cur.r][cur.c][cur.broken];
+            }
+
+            for (int d = 0; d < 4; d++) {
+                int nr = cur.r + dr[d];
+                int nc = cur.c + dc[d];
+                if (nr < 0 || nr >= n || nc < 0 || nc >= m) continue;
+
+                if (map[nr][nc] == 0 && dist[nr][nc][cur.broken] == 0) {
+                    dist[nr][nc][cur.broken] = dist[cur.r][cur.c][cur.broken] + 1;
+                    q.offer(new State(nr, nc, cur.broken));
+                }
+
+                if (map[nr][nc] == 1 && cur.broken == 0 && dist[nr][nc][1] == 0) {
+                    dist[nr][nc][1] = dist[cur.r][cur.c][cur.broken] + 1;
+                    q.offer(new State(nr, nc, 1));
+                }
+            }
+        }
+        return -1;
+    }
+}`
+};
+
+const algorithmLimits={
+dfsbfs:'Java 기준: V + E가 1,000,000~3,000,000 정도까지는 보통 가능. 인접 리스트 권장. 재귀 DFS는 V가 100,000 이상이면 StackOverflowError 위험이 있어 반복 DFS/BFS가 안전합니다.',
+bfs:'Java 기준: V + E가 1,000,000~3,000,000 정도까지 가능. 격자는 R*C가 1,000,000 안팎이면 대체로 무난합니다. 다차원 상태 BFS는 R*C*상태수로 다시 계산하세요.',
+zeroOne:'Java 기준: V + E가 1,000,000~3,000,000 정도까지 가능. Dijkstra보다 상수가 작지만, 가중치가 반드시 0/1이어야 합니다.',
+dijkstra:'Java 기준: V, E가 100,000~300,000 규모에서 자주 사용. E가 1,000,000에 가까우면 PriorityQueue 삽입 수와 메모리를 주의하세요. O((V+E)logV)라 N^2 간선 밀집 그래프에는 불리합니다.',
+bellman:'Java 기준: V*E가 50,000,000~100,000,000 이하 정도일 때 검토. 예: V=500, E=100,000은 빡빡하고, V=10,000이면 거의 불가능한 경우가 많습니다.',
+floyd:'Java 기준: V <= 400~500 정도가 현실적인 상한. V=100은 여유, V=500은 제한 시간/메모리 확인 필수. long[V][V]는 V=500일 때 약 2MB, V=2,000이면 약 32MB지만 시간 O(V^3)이 문제입니다.',
+mst:'Java 기준: Kruskal은 E log E라 E가 100,000~1,000,000 정도까지 자주 사용. Prim도 인접 리스트 기준 E log V. 간선 객체가 많으면 메모리를 주의하세요.',
+tsp:'Java 기준: 순열 완전탐색은 N <= 10, 비트마스크 DP는 N <= 16~20 정도. dp[1<<N][N] 메모리가 핵심이며 N=20이면 long 기준 약 160MB입니다.',
+topo:'Java 기준: V + E가 1,000,000~3,000,000 정도까지 가능. 진입 차수 배열과 인접 리스트만 필요해서 대규모 선행관계 문제에 적합합니다.',
+uf:'Java 기준: 연산 수 Q 또는 간선 수 E가 1,000,000~5,000,000 정도여도 대체로 가능. 경로 압축과 union by size/rank를 반드시 적용하세요.',
+bipartite:'Java 기준: DFS/BFS와 동일하게 V + E가 1,000,000~3,000,000 정도까지 가능. 단절 그래프면 모든 정점을 시작점 후보로 검사해야 합니다.',
+cycle:'Java 기준: DFS/위상정렬 방식은 V + E가 1,000,000~3,000,000 정도까지 가능. 간선 추가 중 무방향 사이클 판별은 Union-Find로 E가 수백만이어도 비교적 안정적입니다.',
+scc:'Java 기준: V + E가 500,000~1,000,000 정도까지 검토 가능. Tarjan 재귀는 깊이가 커질 수 있어 Java에서는 반복 구현 또는 스택 크기 위험을 고려하세요.',
+bridge:'Java 기준: V + E가 500,000~1,000,000 정도까지 검토 가능. low-link DFS는 재귀 깊이 위험이 있으므로 깊은 그래프에서는 반복 DFS나 환경 제한을 확인하세요.',
+flow:'Java 기준: 일반 코딩테스트에서는 V <= 500~2,000, E <= 5,000~20,000 정도에서 Dinic을 우선 검토. 용량 그래프 구조에 따라 편차가 크고, 단순 O(V^2E) 상한만 보고 판단하면 과하게 비관적일 수 있습니다.',
+matching:'Java 기준: DFS 기반 이분 매칭은 왼쪽정점*간선 수가 50,000,000~100,000,000 이하일 때 검토. 더 크면 Hopcroft-Karp O(E√V)를 고려하세요.',
+tree:'Java 기준: 트리 순회는 V가 1,000,000 안팎까지도 O(V)로 가능하지만 재귀 DFS는 위험합니다. LCA는 V log V 메모리: V=100,000이면 보통 가능, V=1,000,000이면 메모리 확인 필수입니다.',
+state:'Java 기준: 핵심은 전체 상태 수입니다. 예: R*C*K 또는 V*K가 1,000,000~3,000,000 정도면 BFS 가능성이 높고, Dijkstra 상태 확장은 (상태 수+간선 수)log(상태 수)를 계산해야 합니다.'
+};
+
+const problemExamples={
+dfsbfs:[
+ ['프로그래머스 네트워크','연결 요소, DFS/BFS','https://school.programmers.co.kr/learn/courses/30/lessons/43162'],
+ ['프로그래머스 단어 변환','상태 그래프 탐색','https://school.programmers.co.kr/learn/courses/30/lessons/43163'],
+ ['프로그래머스 여행경로','DFS, 백트래킹','https://school.programmers.co.kr/learn/courses/30/lessons/43164'],
+ ['프로그래머스 타겟 넘버','DFS 완전탐색','https://school.programmers.co.kr/learn/courses/30/lessons/43165'],
+ ['프로그래머스 전력망을 둘로 나누기','트리 탐색','https://school.programmers.co.kr/learn/courses/30/lessons/86971']
+],
+bfs:[
+ ['프로그래머스 게임 맵 최단거리','격자 BFS, 최단 칸 수','https://school.programmers.co.kr/learn/courses/30/lessons/1844'],
+ ['프로그래머스 가장 먼 노드','무가중치 최단거리','https://school.programmers.co.kr/learn/courses/30/lessons/49189'],
+ ['프로그래머스 미로 탈출','격자 BFS 2단계','https://school.programmers.co.kr/learn/courses/30/lessons/159993'],
+ ['프로그래머스 리코쳇 로봇','격자 BFS','https://school.programmers.co.kr/learn/courses/30/lessons/169199'],
+ ['프로그래머스 아이템 줍기','좌표 확장 BFS','https://school.programmers.co.kr/learn/courses/30/lessons/87694']
+],
+zeroOne:[
+ ['BOJ 알고스팟','0-1 BFS 대표','https://www.acmicpc.net/problem/1261'],
+ ['BOJ 숨바꼭질 3','0초/1초 이동','https://www.acmicpc.net/problem/13549'],
+ ['BOJ 레이저 통신','방향 전환 비용','https://www.acmicpc.net/problem/6087'],
+ ['BOJ 거울 설치','거울 수 최소화','https://www.acmicpc.net/problem/2151']
+],
+dijkstra:[
+ ['프로그래머스 배달','Dijkstra 기본','https://school.programmers.co.kr/learn/courses/30/lessons/12978'],
+ ['프로그래머스 합승 택시 요금','Dijkstra/Floyd 응용','https://school.programmers.co.kr/learn/courses/30/lessons/72413'],
+ ['프로그래머스 등산코스 정하기','Multi-source Dijkstra','https://school.programmers.co.kr/learn/courses/30/lessons/118669'],
+ ['BOJ 최단경로','Dijkstra 기본','https://www.acmicpc.net/problem/1753'],
+ ['BOJ 특정한 최단 경로','경유 최단거리','https://www.acmicpc.net/problem/1504']
+],
+bellman:[
+ ['BOJ 타임머신','Bellman-Ford 기본','https://www.acmicpc.net/problem/11657'],
+ ['BOJ 웜홀','음수 사이클 판별','https://www.acmicpc.net/problem/1865'],
+ ['BOJ 오민식의 고민','양수 사이클 변형','https://www.acmicpc.net/problem/1219'],
+ ['BOJ 할로윈 묘지','음수 간선 격자','https://www.acmicpc.net/problem/3860']
+],
+floyd:[
+ ['프로그래머스 순위','도달 관계, Floyd-Warshall','https://school.programmers.co.kr/learn/courses/30/lessons/49191'],
+ ['프로그래머스 합승 택시 요금','모든 쌍 최단거리 가능','https://school.programmers.co.kr/learn/courses/30/lessons/72413'],
+ ['BOJ 플로이드','Floyd-Warshall 기본','https://www.acmicpc.net/problem/11404'],
+ ['BOJ 케빈 베이컨의 6단계 법칙','모든 쌍 거리','https://www.acmicpc.net/problem/1389'],
+ ['BOJ 운동','사이클 최단거리','https://www.acmicpc.net/problem/1956']
+],
+mst:[
+ ['프로그래머스 섬 연결하기','Kruskal MST','https://school.programmers.co.kr/learn/courses/30/lessons/42861'],
+ ['BOJ 최소 스패닝 트리','MST 기본','https://www.acmicpc.net/problem/1197'],
+ ['BOJ 네트워크 연결','Kruskal/Prim','https://www.acmicpc.net/problem/1922'],
+ ['BOJ 행성 터널','MST 간선 줄이기','https://www.acmicpc.net/problem/2887'],
+ ['BOJ 별자리 만들기','좌표 MST','https://www.acmicpc.net/problem/4386']
+],
+tsp:[
+ ['BOJ 외판원 순회','TSP 비트마스크 DP','https://www.acmicpc.net/problem/2098'],
+ ['프로그래머스 외벽 점검','순열/상태 탐색 감각','https://school.programmers.co.kr/learn/courses/30/lessons/60062'],
+ ['BOJ 외판원 순회 2','순열 완전탐색','https://www.acmicpc.net/problem/10971'],
+ ['BOJ 발전소','비트마스크 DP','https://www.acmicpc.net/problem/1102']
+],
+topo:[
+ ['프로그래머스 동굴 탐험','선행 조건, 위상 감각','https://school.programmers.co.kr/learn/courses/30/lessons/67260'],
+ ['BOJ 줄 세우기','위상 정렬 기본','https://www.acmicpc.net/problem/2252'],
+ ['BOJ 작업','위상 정렬 + DP','https://www.acmicpc.net/problem/2056'],
+ ['BOJ ACM Craft','위상 정렬 + DP','https://www.acmicpc.net/problem/1005'],
+ ['BOJ 문제집','우선순위 큐 위상정렬','https://www.acmicpc.net/problem/1766']
+],
+uf:[
+ ['프로그래머스 표 병합','Union-Find 응용','https://school.programmers.co.kr/learn/courses/30/lessons/150366'],
+ ['프로그래머스 호텔 방 배정','Disjoint-set next pointer','https://school.programmers.co.kr/learn/courses/30/lessons/64063'],
+ ['프로그래머스 섬 연결하기','Kruskal에서 사용','https://school.programmers.co.kr/learn/courses/30/lessons/42861'],
+ ['BOJ 집합의 표현','Union-Find 기본','https://www.acmicpc.net/problem/1717'],
+ ['BOJ 사이클 게임','Union-Find 사이클','https://www.acmicpc.net/problem/20040']
+],
+bipartite:[
+ ['BOJ 이분 그래프','BFS/DFS 색칠 기본','https://www.acmicpc.net/problem/1707'],
+ ['BOJ 팀배분','두 그룹 분할','https://www.acmicpc.net/problem/1953'],
+ ['BOJ 소수 쌍','이분 그래프 + 매칭','https://www.acmicpc.net/problem/1017'],
+ ['BOJ 컨닝','격자 이분 매칭','https://www.acmicpc.net/problem/1014']
+],
+cycle:[
+ ['프로그래머스 방의 개수','사이클/영역 생성','https://school.programmers.co.kr/learn/courses/30/lessons/49190'],
+ ['BOJ 사이클 게임','Union-Find 사이클','https://www.acmicpc.net/problem/20040'],
+ ['BOJ 텀 프로젝트','방향 그래프 사이클','https://www.acmicpc.net/problem/9466'],
+ ['BOJ 순열 사이클','사이클 개수','https://www.acmicpc.net/problem/10451']
+],
+scc:[
+ ['BOJ Strongly Connected Component','Tarjan/Kosaraju 기본','https://www.acmicpc.net/problem/2150'],
+ ['BOJ 2-SAT - 3','SCC 응용','https://www.acmicpc.net/problem/11280'],
+ ['BOJ 도미노','SCC 압축','https://www.acmicpc.net/problem/4196'],
+ ['BOJ ATM','SCC + DAG DP','https://www.acmicpc.net/problem/4013']
+],
+bridge:[
+ ['BOJ 단절선','브리지 기본','https://www.acmicpc.net/problem/11400'],
+ ['BOJ 단절점','단절점 기본','https://www.acmicpc.net/problem/11266'],
+ ['BOJ 단절점과 단절선','트리 절단 성질','https://www.acmicpc.net/problem/14675'],
+ ['BOJ Cactus? Not cactus?','절단 구조 응용','https://www.acmicpc.net/problem/10891']
+],
+flow:[
+ ['BOJ 최대 유량','Max Flow 기본','https://www.acmicpc.net/problem/6086'],
+ ['BOJ 도시 왕복하기 2','정점 분할 + 유량','https://www.acmicpc.net/problem/2316'],
+ ['BOJ 열혈강호 5','유량 기반 배정','https://www.acmicpc.net/problem/11408'],
+ ['BOJ 책 구매하기','유량 모델링','https://www.acmicpc.net/problem/11405']
+],
+matching:[
+ ['BOJ 축사 배정','이분 매칭 기본','https://www.acmicpc.net/problem/2188'],
+ ['BOJ 열혈강호','DFS 기반 이분 매칭','https://www.acmicpc.net/problem/11375'],
+ ['BOJ 열혈강호 2','추가 매칭','https://www.acmicpc.net/problem/11376'],
+ ['BOJ 상어의 저녁식사','이분 매칭 응용','https://www.acmicpc.net/problem/1671']
+],
+tree:[
+ ['프로그래머스 전력망을 둘로 나누기','트리 DFS, 서브트리','https://school.programmers.co.kr/learn/courses/30/lessons/86971'],
+ ['프로그래머스 모두 0으로 만들기','트리 후위 DFS','https://school.programmers.co.kr/learn/courses/30/lessons/76503'],
+ ['프로그래머스 길 찾기 게임','트리 구성/순회','https://school.programmers.co.kr/learn/courses/30/lessons/42892'],
+ ['BOJ 트리의 부모 찾기','부모 DFS/BFS','https://www.acmicpc.net/problem/11725'],
+ ['BOJ 트리의 지름','트리 DFS 2회','https://www.acmicpc.net/problem/1167']
+],
+state:[
+ ['프로그래머스 아이템 줍기','좌표 확장 BFS','https://school.programmers.co.kr/learn/courses/30/lessons/87694'],
+ ['프로그래머스 경주로 건설','방향 상태 + 비용','https://school.programmers.co.kr/learn/courses/30/lessons/67259'],
+ ['프로그래머스 카드 짝 맞추기','상태 BFS/순열','https://school.programmers.co.kr/learn/courses/30/lessons/72415'],
+ ['BOJ 벽 부수고 이동하기','벽 파괴 상태 BFS','https://www.acmicpc.net/problem/2206'],
+ ['BOJ 말이 되고픈 원숭이','이동 방식 상태 BFS','https://www.acmicpc.net/problem/1600']
+]
+};
+
+const nodes={
+ start:{q:'관계·연결·이동·경로·선후관계 문제인가?',hint:'정점과 간선으로 모델링하거나, 격자의 칸을 정점처럼 볼 수 있는지 확인하세요.',a:[['예, 그래프 문제다','목적에 따라 분기','goal'],['아니오','이 웹은 그래프 알고리즘 판단용','nongraph']]},
+ nongraph:{q:'그래프가 아니라면 무엇을 먼저 검토할까?',hint:'배열·문자열·DP·그리디·투 포인터·이분 탐색·완전탐색을 검토하세요.',a:[['그래프로 다시 모델링할 수 있다','그래프 목적 분기로 이동','goal'],['처음부터 다시 판단한다','입력 조건을 다시 읽기','start']]},
+ goal:{q:'문제의 가장 직접적인 목표는 무엇인가?',hint:'구현 방법이 아니라 “출력해야 하는 값”을 기준으로 고르세요.',a:[['최소 이동 횟수 또는 최소 비용','최단 경로 분기','shortest'],['모든 정점을 최소 비용으로 연결','전체 연결 비용','mst!'],['모든 정점을 직접 방문하는 경로 최소','전체 방문 순서','tsp!'],['선행 조건을 지키는 순서','작업 순서','topo!'],['같은 집합인지 반복 확인','집합 합치기·연결 질의','uf!'],['단순 방문·도달·그룹 개수','기본 탐색','stateCheck'],['사이클 존재 여부','방향성에 따른 판별','cycle!'],['두 그룹으로 나눌 수 있는지','이분 그래프','bipartite!'],['서로 왕복 가능한 그룹','SCC','scc!'],['제거하면 단절되는 요소','브리지·단절점','bridge!'],['최대 전달량','용량 기반 네트워크','flow!'],['두 그룹을 최대한 많이 짝짓기','매칭','matching!'],['트리의 부모·거리·서브트리·조상','트리 문제','tree!']]},
+ stateCheck:{q:'같은 정점이어도 보유 자원이나 이전 선택에 따라 이후 행동이 달라지는가?',hint:'벽 파괴 여부, 쿠폰 사용 횟수, 연료, 방문 집합 등이 대표적입니다.',a:[['예','상태를 추가해야 함','state!'],['아니오','일반 탐색 가능','minNeed']]},
+ minNeed:{q:'가중치가 없는 그래프에서 최소 이동 횟수가 필요한가?',hint:'최소 간선 수라면 DFS가 아니라 BFS입니다.',a:[['예','최소 단계 탐색','bfs!'],['아니오','방문·도달·영역 탐색','dfsbfs!']]},
+ shortest:{q:'같은 정점에서도 상태에 따라 결과가 달라지는가?',hint:'쿠폰, 벽 파괴, 이전 방향, 방문 집합이 있다면 상태 확장을 먼저 고려하세요.',a:[['예','상태 확장 최단 경로','state!'],['아니오','가중치 확인','weight']]},
+ weight:{q:'간선 가중치는 어떤 형태인가?',hint:'가중치 조건이 최단 경로 알고리즘을 거의 결정합니다.',a:[['없거나 모두 동일','최소 간선 수','bfs!'],['정확히 0 또는 1','Deque 활용','zeroOne!'],['모두 0 이상','음수 없음','pair'],['음수 간선이 있음','다익스트라 금지','negative']]},
+ pair:{q:'모든 정점 쌍의 최단 거리가 필요한가?',hint:'특정 시작점 하나인지, 모든 출발-도착 조합인지 구분하세요.',a:[['예','V 크기도 함께 확인','floyd!'],['아니오','단일 또는 일부 시작점','dijkstra!']]},
+ negative:{q:'그래프가 DAG이거나 모든 정점 쌍 거리가 필요한가?',hint:'음수 간선이 있어도 DAG라면 위상 정렬 + DP가 가능합니다.',a:[['DAG이다','선행 순서로 완화','topo!'],['모든 정점 쌍이다','작은 V 필요','floyd!'],['단일 시작점이다','음수 사이클도 확인','bellman!']]}
+};
+let current='start',history=[],choices=[];
+const $=id=>document.getElementById(id);
+const algorithmCatalog=[
+ ['dfsbfs','DFS / BFS','방문·도달·영역'],
+ ['bfs','BFS','무가중치 최단'],
+ ['zeroOne','0-1 BFS','0/1 가중치'],
+ ['dijkstra','Dijkstra','비음수 최단'],
+ ['bellman','Bellman-Ford','음수 간선'],
+ ['floyd','Floyd-Warshall','모든 쌍 최단'],
+ ['mst','Kruskal / MST','전체 연결 비용'],
+ ['tsp','TSP','전체 방문 경로'],
+ ['topo','위상 정렬','선행 관계'],
+ ['uf','Union-Find','집합 병합'],
+ ['bipartite','이분 그래프','두 그룹 색칠'],
+ ['cycle','사이클 판별','순환 구조'],
+ ['scc','SCC','상호 도달 그룹'],
+ ['bridge','브리지 / 단절점','제거 시 단절'],
+ ['flow','최대 유량','용량 네트워크'],
+ ['matching','이분 매칭','최대 짝짓기'],
+ ['tree','트리','부모·서브트리·LCA'],
+ ['state','상태 확장','다차원 visited/dist']
+];
+function renderCatalog(){
+  $('algoList').innerHTML=algorithmCatalog.map(([key,name,desc])=>`<button class="algo-pick" type="button" data-algo="${key}">${name}<span>${desc}</span></button>`).join('');
+  document.querySelectorAll('[data-algo]').forEach(btn=>btn.addEventListener('click',()=>openAlgorithm(btn.dataset.algo)));
+}
+function showHome(){
+  current='start';history=[];choices=[];
+  $('home').classList.remove('hidden');
+  $('catalogSection').classList.add('hidden');
+  $('quiz').classList.add('hidden');
+  $('result').classList.remove('show');
+  $('backBtn').disabled=true;
+  $('progressBar').style.width='0';
+  $('stepText').textContent='대기';
+  renderPath();
+}
+function startDecision(){
+  current='start';history=[];choices=[];
+  $('home').classList.add('hidden');
+  render();
+}
+function openAlgorithm(key){
+  history=[];choices=[`알고리즘별 정보 보기: ${results[key]?.algo||key}`];
+  $('home').classList.add('hidden');
+  showResult(key);
+}
+function render(){
+  const terminal=current.endsWith('!');
+  $('backBtn').disabled=history.length===0;
+  if(terminal){showResult(current.slice(0,-1));return;}
+  $('home').classList.add('hidden');$('quiz').classList.remove('hidden');$('result').classList.remove('show');
+  const n=nodes[current];$('question').textContent=n.q;$('hint').textContent=n.hint;$('answers').innerHTML='';
+  n.a.forEach(([label,desc,next])=>{const b=document.createElement('button');b.className='answer';b.innerHTML=`<strong>${label}</strong><span>${desc}</span>`;b.addEventListener('click',()=>select(label,next));$('answers').appendChild(b)});
+  const pct=Math.min(90,15+history.length*13);$('progressBar').style.width=pct+'%';$('stepText').textContent=(history.length+1)+'단계';renderPath();
+}
+function select(label,next){history.push(current);choices.push(label);current=next;render()}
+function showResult(key){const r=results[key]||results.dfsbfs;$('home').classList.add('hidden');$('quiz').classList.add('hidden');$('result').classList.add('show');$('progressBar').style.width='100%';
+ $('resultCategory').textContent=r.category;$('resultAlgo').textContent=r.algo;$('resultConfidence').textContent=r.confidence;$('resultWhy').textContent=r.why;
+ $('resultConditions').innerHTML=r.conditions.map(x=>`<li>${x}</li>`).join('');$('resultComplexity').textContent=r.complexity+'\n\n'+(algorithmLimits[key]||'Java 기준: 입력 크기와 제한 시간을 보고 단순 풀이 연산 수가 대략 1억 회를 크게 넘지 않는지 먼저 확인하세요.');$('resultKeywords').textContent=r.keywords;$('resultCheck').textContent=r.check;$('resultCode').textContent=codeExamples[key]||r.code;
+ $('resultExamples').innerHTML=(problemExamples[key]||[]).map(([title,desc,url])=>`<a class="example-link" href="${url}" target="_blank" rel="noopener noreferrer"><strong>${title}</strong><span>${desc}</span></a>`).join('');
+ $('resultWarning').textContent=r.warning||'';$('resultWarning').classList.toggle('hidden',!r.warning);$('alternatives').innerHTML=r.alts.map(x=>`<span class="alt">${x}</span>`).join('');renderPath();
+}
+function renderPath(){const p=$('path');if(!choices.length){p.innerHTML='<p class="empty">선택한 답변이 여기에 쌓입니다.</p>';return}p.innerHTML=choices.map((x,i)=>`<span class="crumb">${i+1}. ${x}</span>`).join('')}
+function reset(){document.querySelectorAll('.check input').forEach(x=>x.checked=false);showHome()}
+$('backBtn').addEventListener('click',()=>{if(!history.length)return;current=history.pop();choices.pop();render()});$('resetBtn').addEventListener('click',reset);$('againBtn').addEventListener('click',reset);$('reviewBtn').addEventListener('click',()=>{$('path').scrollIntoView({behavior:'smooth',block:'center'})});$('startDecisionBtn').addEventListener('click',startDecision);$('showCatalogBtn').addEventListener('click',()=>{$('catalogSection').classList.remove('hidden');$('catalogSection').scrollIntoView({behavior:'smooth',block:'center'})});
+function openDrawer(){ $('sideDrawer').classList.add('open'); $('drawerBackdrop').classList.add('show'); }
+function closeDrawer(){ $('sideDrawer').classList.remove('open'); $('drawerBackdrop').classList.remove('show'); }
+$('openDrawerBtn').addEventListener('click',openDrawer);$('closeDrawerBtn').addEventListener('click',closeDrawer);$('drawerBackdrop').addEventListener('click',closeDrawer);
+function guide(){const n=Number($('nInput').value||0),m=Number($('mInput').value||0);let t='값을 입력하면 우선 고려 가능한 시간복잡도를 안내합니다.';if(n){if(n<=10)t='N ≤ 10: O(N!) 순열·완전탐색도 가능성을 검토할 수 있습니다.';else if(n<=20)t='N ≤ 20: O(2^N), O(N·2^N) 비트마스크·TSP DP를 검토할 수 있습니다.';else if(n<=100)t='N ≤ 100: O(N³)도 제한 시간에 따라 가능할 수 있습니다.';else if(n<=500)t='N ≤ 500: O(N³)은 주의가 필요하며, Floyd-Warshall 가능 여부를 제한 시간과 함께 판단하세요.';else if(n<=2000)t='N ≤ 2,000: O(N²) 가능성이 있으나 상수와 제한 시간을 확인하세요.';else if(n<=10000)t='N ≤ 10,000: O(N²)은 위험합니다. O(N log N) 또는 O(V+E)를 우선 검토하세요.';else if(n<=100000)t='N ≤ 100,000: O(N log N) 이하를 권장합니다. 그래프라면 O(V+E), 다익스트라, 유니온파인드가 대표적입니다.';else t='N이 매우 큽니다: O(N) 또는 작은 O(N log N)을 목표로 하세요.';if(m)t+=` 현재 V+E ≈ ${(n+m).toLocaleString()}회 단위의 전체 탐색은 유력합니다.`}$('complexityGuide').textContent=t}
+$('nInput').addEventListener('input',guide);$('mInput').addEventListener('input',guide);renderCatalog();showHome();
+</script>
+</body>
+</html>
