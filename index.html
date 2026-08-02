@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>그래프 알고리즘 의사결정 도우미</title>
+  <title>코딩 테스트 유형·알고리즘 도우미</title>
   <style>
     :root{--bg:#f6f7fb;--panel:#fff;--text:#18212f;--muted:#667085;--line:#dfe3ea;--primary:#4f46e5;--primary-soft:#eef2ff;--ok:#067647;--warn:#b54708;--danger:#b42318;--shadow:0 14px 34px rgba(16,24,40,.08)}
     *{box-sizing:border-box} body{margin:0;font-family:Pretendard,"Noto Sans KR",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#f8f9ff 0,#f6f7fb 34%,#f6f7fb 100%);color:var(--text)}
@@ -14,7 +14,7 @@
     .layout{display:block}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
     .main{padding:22px}.side{position:fixed;top:0;right:0;z-index:40;width:min(420px,calc(100% - 28px));height:100vh;padding:20px;overflow:auto;border-radius:18px 0 0 18px;transform:translateX(105%);transition:transform .2s ease}.side.open{transform:translateX(0)}.drawer-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.drawer-close{padding:8px 11px;border-radius:10px}.drawer-backdrop{position:fixed;inset:0;z-index:35;background:rgba(16,24,40,.34);opacity:0;pointer-events:none;transition:opacity .2s ease}.drawer-backdrop.show{opacity:1;pointer-events:auto}.float-tool{position:fixed;right:20px;bottom:20px;z-index:30;border:0;background:var(--primary);color:white;padding:13px 16px;border-radius:999px;box-shadow:0 14px 30px rgba(79,70,229,.28);font-weight:800}.section-title{font-size:14px;color:var(--muted);font-weight:800;margin:0 0 10px;text-transform:uppercase;letter-spacing:.04em}
     .progress-wrap{display:flex;gap:12px;align-items:center;margin-bottom:20px}.progress{height:9px;background:#edf0f4;border-radius:999px;overflow:hidden;flex:1}.progress>div{height:100%;background:var(--primary);width:0;transition:width .25s}.step{font-size:13px;color:var(--muted);white-space:nowrap}
-    .home{display:block}.home.hidden{display:none!important}.home-intro{margin-bottom:18px}.home-intro h2{font-size:clamp(24px,3vw,34px);line-height:1.28;margin:0 0 8px}.home-intro p{margin:0;color:var(--muted);line-height:1.6}.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}.mode-card{width:100%;text-align:left;padding:18px;border-radius:16px;border:1px solid var(--line);background:white;transition:.15s}.mode-card:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}.mode-card strong{display:block;font-size:18px;margin-bottom:7px}.mode-card span{display:block;color:var(--muted);line-height:1.5}.algo-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.algo-pick{width:100%;min-height:54px;text-align:left;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:#fbfcfe;font-weight:800}.algo-pick span{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:600;line-height:1.35}
+    .home{display:block}.home.hidden{display:none!important}.home-intro{margin-bottom:18px}.home-intro h2{font-size:clamp(24px,3vw,34px);line-height:1.28;margin:0 0 8px}.home-intro p{margin:0;color:var(--muted);line-height:1.6}.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}.mode-card{width:100%;text-align:left;padding:18px;border-radius:16px;border:1px solid var(--line);background:white;transition:.15s}.mode-card:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}.mode-card strong{display:block;font-size:18px;margin-bottom:7px}.mode-card span{display:block;color:var(--muted);line-height:1.5}.catalog-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.filter-btn{border:1px solid var(--line);background:white;padding:8px 12px;border-radius:999px;font-size:13px;font-weight:800}.filter-btn.active{color:var(--primary);border-color:var(--primary);background:var(--primary-soft)}.algo-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.algo-pick{width:100%;min-height:70px;text-align:left;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:#fbfcfe;font-weight:800}.algo-pick .kind{display:inline-block;margin:0 0 5px;color:var(--primary);font-size:11px;font-weight:800}.algo-pick .desc{display:block;margin-top:3px;color:var(--muted);font-size:12px;font-weight:600;line-height:1.35}
     .question{font-size:clamp(22px,3vw,31px);line-height:1.36;margin:0 0 9px}.hint{color:var(--muted);line-height:1.55;margin:0 0 18px}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{width:100%;height:100%;text-align:left;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:white;transition:.15s}.answer:hover{border-color:var(--primary);background:var(--primary-soft);transform:translateY(-1px)}.answer strong{display:block;margin-bottom:4px}.answer span{color:var(--muted);font-size:14px;line-height:1.45}
     .nav{display:flex;justify-content:space-between;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
     .path{display:flex;gap:8px;flex-wrap:wrap}.crumb{background:#f2f4f7;border:1px solid #eaecf0;border-radius:999px;padding:6px 9px;font-size:12px;color:#475467}.empty{color:var(--muted);font-size:14px;line-height:1.55}
@@ -30,9 +30,9 @@
 <div class="app">
   <header>
     <div>
-      <div class="eyebrow">JAVA CODING TEST · GRAPH DECISION TREE</div>
-      <h1 class="title">그래프 알고리즘 의사결정 도우미</h1>
-      <p class="subtitle">문제의 목적, 가중치, 방향성, 입력 크기, 상태 확장 여부를 순서대로 확인해 가장 가능성 높은 알고리즘을 좁힙니다.</p>
+      <div class="eyebrow">JAVA CODING TEST · ALGORITHM DECISION TREE</div>
+      <h1 class="title">코딩 테스트 유형·알고리즘 도우미</h1>
+      <p class="subtitle">그래프뿐 아니라 배열·문자열, 탐색, DP, 그리디 등 문제의 핵심 조건을 순서대로 확인해 가장 가능성 높은 풀이를 좁힙니다.</p>
     </div>
     <div class="header-actions">
       <button class="btn" id="backBtn" disabled>이전 질문</button>
@@ -49,16 +49,17 @@
         </div>
         <div class="mode-grid">
           <button class="mode-card" id="startDecisionBtn" type="button">
-            <strong>의사결정해서 알고리즘 찾기</strong>
-            <span>최소값, 전체 연결, 순서, 집합 질의, 탐색 목적을 차례대로 답하면서 후보를 좁힙니다.</span>
+            <strong>유형 찾기</strong>
+            <span>그래프 여부부터 출력 목표, 입력 특성, 연속 구간과 최적 부분 구조까지 답하면서 풀이 유형을 좁힙니다.</span>
           </button>
           <button class="mode-card" id="showCatalogBtn" type="button">
             <strong>알고리즘별 정보 보기</strong>
-            <span>Kruskal, Dijkstra, 위상 정렬처럼 원하는 알고리즘의 조건, 복잡도, Java 코드를 바로 봅니다.</span>
+            <span>그래프·탐색·DP·그리디·자료구조 등 원하는 알고리즘의 조건, 복잡도, Java 코드를 바로 봅니다.</span>
           </button>
         </div>
         <div class="catalog-section hidden" id="catalogSection">
           <h2 class="section-title">알고리즘 바로 보기</h2>
+          <div class="catalog-filters" id="catalogFilters" aria-label="알고리즘 유형 필터"></div>
           <div class="algo-list" id="algoList"></div>
         </div>
       </section>
@@ -145,7 +146,20 @@ const results={
  flow:{category:'네트워크 최적화',algo:'최대 유량',confidence:'용량 제한 내 최대 전달량',why:'각 간선의 용량 제한을 지키면서 출발점에서 도착점까지 최대한 많이 보내는 문제입니다.',conditions:['source와 sink','간선 용량','잔여 그래프'],complexity:'Edmonds-Karp O(VE²), Dinic 일반적으로 O(V²E)',keywords:'최대 전송량, 용량, 최소 컷, 공급',check:'단순 최단 경로가 아니라 동시에 흘릴 수 있는 양의 합을 구하는지 확인하세요.',code:'// residual capacity가 있는 경로를 반복적으로 찾아 유량 증가',alts:['Dinic','Edmonds-Karp','최소 컷']},
  matching:{category:'매칭',algo:'이분 매칭',confidence:'두 그룹 사이 최대 짝짓기',why:'왼쪽 그룹과 오른쪽 그룹 사이 가능한 연결 중 서로 겹치지 않는 최대 쌍을 만들면 이분 매칭입니다.',conditions:['두 종류의 집합','한 원소당 최대 한 쌍','가능한 매칭 수 최대화'],complexity:'DFS 기반 O(VE), Hopcroft-Karp O(E√V)',keywords:'사람-업무, 학생-프로젝트, 직원-자리, 최대 배정',check:'가중치가 있는 최적 매칭이면 헝가리안 등 다른 알고리즘이 필요할 수 있습니다.',code:'// match[right]를 두고 augmenting path 탐색',alts:['DFS 이분 매칭','Hopcroft-Karp','최대 유량 변환']},
  tree:{category:'트리',algo:'트리 DFS/BFS · 트리 DP · LCA',confidence:'연결 + 간선 V-1이면 트리',why:'연결 그래프이며 간선 수가 V-1이면 사이클이 없는 트리이므로 경로가 유일하다는 성질을 활용합니다.',conditions:['연결 그래프','간선 수 V-1','두 정점 사이 경로 하나'],complexity:'기본 순회 O(V), LCA 전처리 O(V log V)',keywords:'부모, 서브트리, 트리 지름, 공통 조상, 계층',check:'질문이 부모/거리/서브트리/공통 조상 중 무엇인지에 따라 세부 알고리즘을 고르세요.',code:'// parent[next] = cur; depth[next] = depth[cur] + 1;',alts:['트리 지름','트리 DP','LCA']},
- state:{category:'상태 확장',algo:'상태 확장 BFS / Dijkstra / DP',confidence:'같은 정점에서도 상황에 따라 미래가 달라짐',why:'위치가 같아도 사용한 쿠폰, 부순 벽, 남은 연료, 방문 집합 등에 따라 이후 선택이 달라지면 상태를 차원에 포함해야 합니다.',conditions:['node만으로 상태 표현 불충분','보유 자원·이전 선택이 중요','다차원 visited/dist 필요'],complexity:'기본 알고리즘 복잡도 × 상태 개수',keywords:'한 번만 사용, 최대 K회, 벽 파괴, 쿠폰, 연료, 방문 집합',check:'상태 수의 곱이 메모리·시간 제한을 넘지 않는지 계산하세요.',warning:'visited[node] 하나로 처리하면 다른 상태의 더 좋은 경로를 잘못 제거할 수 있습니다.',code:'boolean[][] visited = new boolean[n][stateCount];\nlong[][] dist = new long[n][stateCount];',alts:['BFS + 상태','Dijkstra + 상태','비트마스크 DP']}
+ state:{category:'상태 확장',algo:'상태 확장 BFS / Dijkstra / DP',confidence:'같은 정점에서도 상황에 따라 미래가 달라짐',why:'위치가 같아도 사용한 쿠폰, 부순 벽, 남은 연료, 방문 집합 등에 따라 이후 선택이 달라지면 상태를 차원에 포함해야 합니다.',conditions:['node만으로 상태 표현 불충분','보유 자원·이전 선택이 중요','다차원 visited/dist 필요'],complexity:'기본 알고리즘 복잡도 × 상태 개수',keywords:'한 번만 사용, 최대 K회, 벽 파괴, 쿠폰, 연료, 방문 집합',check:'상태 수의 곱이 메모리·시간 제한을 넘지 않는지 계산하세요.',warning:'visited[node] 하나로 처리하면 다른 상태의 더 좋은 경로를 잘못 제거할 수 있습니다.',code:'boolean[][] visited = new boolean[n][stateCount];\nlong[][] dist = new long[n][stateCount];',alts:['BFS + 상태','Dijkstra + 상태','비트마스크 DP']},
+ binarySearch:{category:'탐색',algo:'이분 탐색 / 매개변수 탐색',confidence:'정렬된 범위 또는 답의 단조성이 있을 때',why:'정렬된 데이터에서 값을 찾거나, 어떤 답이 가능하면 그보다 완화된 답도 가능한 단조 조건이 있으면 탐색 범위를 절반씩 줄일 수 있습니다.',conditions:['정렬된 배열 또는 정수 답 범위','가능/불가능 판정이 한 번만 바뀜','최솟값·최댓값을 빠르게 탐색'],complexity:'값 탐색 O(log N), 매개변수 탐색 O(판정 비용 × log 답 범위)',keywords:'최소로 가능한, 최대한, 적어도, 정렬된 배열에서 찾기',check:'lo/hi가 가능한 값인지 불가능한 값인지 정의하고 종료 후 어느 포인터가 답인지 확인하세요.',warning:'mid 계산은 lo + (hi - lo) / 2로 오버플로를 피하세요.',code:'long lo = 0, hi = LIMIT;\nwhile (lo <= hi) {\n    long mid = lo + (hi - lo) / 2;\n    if (possible(mid)) lo = mid + 1;\n    else hi = mid - 1;\n}\n// 최대 가능값은 hi',alts:['정렬','누적 합','투 포인터']},
+ twoPointer:{category:'배열·구간',algo:'투 포인터',confidence:'정렬 배열이나 연속 구간을 한 방향으로 훑을 때',why:'두 인덱스를 되돌리지 않고 움직이며 쌍 또는 구간을 찾으면 중첩 반복을 선형 탐색으로 줄일 수 있습니다.',conditions:['정렬된 배열의 두 원소 조합 또는 연속 구간','포인터 이동 방향을 결정 가능','각 포인터가 최대 N번 이동'],complexity:'시간 O(N), 공간 O(1)',keywords:'두 수의 합, 연속 부분 수열, 구간 합, 양 끝에서 선택',check:'음수가 섞인 구간 합에서는 합의 크기만으로 포인터 방향을 정할 수 없는 경우가 있습니다.',code:'int left = 0, right = n - 1;\nwhile (left < right) {\n    long sum = a[left] + a[right];\n    if (sum == target) break;\n    if (sum < target) left++;\n    else right--;\n}',alts:['슬라이딩 윈도우','해시','이분 탐색']},
+ slidingWindow:{category:'배열·구간',algo:'슬라이딩 윈도우',confidence:'연속 구간의 조건을 유지할 때',why:'오른쪽을 확장하고 조건이 깨지면 왼쪽을 줄이며 현재 구간 정보를 갱신하면 모든 연속 구간을 효율적으로 다룰 수 있습니다.',conditions:['연속된 부분 배열·문자열','창에서 원소 추가/제거 가능','최장·최단 유효 구간'],complexity:'시간 O(N), 공간 O(문자 종류 또는 상태 수)',keywords:'연속된, 가장 긴 부분 문자열, K개 이하, 중복 없는 구간',check:'고정 길이 창인지 가변 길이 창인지 먼저 구분하세요.',code:'int left = 0;\nfor (int right = 0; right < n; right++) {\n    add(a[right]);\n    while (!valid()) remove(a[left++]);\n    answer = Math.max(answer, right - left + 1);\n}',alts:['투 포인터','누적 합','해시']},
+ prefixSum:{category:'배열·구간',algo:'누적 합 / 차분 배열',confidence:'구간 합·구간 갱신 질의가 반복될 때',why:'앞에서부터 합을 미리 계산하면 각 구간 합을 O(1)에 구할 수 있고, 차분 배열은 여러 구간 갱신을 한 번에 반영합니다.',conditions:['정적 배열의 구간 질의 다수','2차원 직사각형 합 가능','오프라인 구간 증가'],complexity:'전처리 O(N), 질의 O(1), 공간 O(N)',keywords:'구간 합, 부분합, 여러 번 질문, 범위에 더하기',check:'prefix[0]=0을 두면 [l,r] 합을 prefix[r+1]-prefix[l]로 일관되게 처리할 수 있습니다.',code:'long[] prefix = new long[n + 1];\nfor (int i = 0; i < n; i++) prefix[i + 1] = prefix[i] + a[i];\nlong rangeSum = prefix[right + 1] - prefix[left];',alts:['Fenwick Tree','Segment Tree','슬라이딩 윈도우']},
+ dp:{category:'동적 계획법',algo:'Dynamic Programming',confidence:'작은 문제의 답이 반복되고 최적 부분 구조가 있을 때',why:'상태를 명확히 정의하고 이전 상태의 답을 재사용하면 지수적인 선택 탐색을 다항 시간으로 줄일 수 있습니다.',conditions:['중복되는 부분 문제','현재 답을 이전 상태로 표현 가능','상태 수와 전이 수가 제한 내'],complexity:'시간 O(상태 수 × 상태당 전이), 공간 O(상태 수)',keywords:'경우의 수, 최댓값·최솟값, 선택하거나 말거나, N번째 값',check:'dp[state]의 의미, 초기값, 계산 순서, 정답 상태를 문장으로 먼저 적으세요.',warning:'불가능 상태의 초기값과 정수 오버플로를 주의하세요.',code:'long[] dp = new long[n + 1];\nArrays.fill(dp, INF);\ndp[0] = 0;\nfor (int i = 1; i <= n; i++) {\n    for (int choice : choices) {\n        if (i >= choice) dp[i] = Math.min(dp[i], dp[i - choice] + 1);\n    }\n}',alts:['메모이제이션','배낭 DP','LIS']},
+ greedy:{category:'그리디',algo:'Greedy',confidence:'지금의 최선 선택을 되돌릴 필요가 없을 때',why:'각 단계의 지역 최적 선택이 전체 최적해로 이어짐을 교환 논증이나 뒤처지지 않음으로 증명할 수 있으면 가장 단순하고 빠릅니다.',conditions:['선택 기준을 명확히 정렬 가능','이전 선택을 번복할 필요 없음','그리디 정당성 증명 가능'],complexity:'정렬이 필요하면 O(N log N), 순회만 하면 O(N)',keywords:'최대한 많이, 최소 개수, 가장 이른 종료, 매 순간 선택',check:'작은 반례를 만들어 DP·완전탐색 결과와 비교하고 교환 논증이 가능한지 확인하세요.',warning:'직관적으로 가장 커 보이는 값을 고르는 것만으로는 그리디의 정당성이 보장되지 않습니다.',code:'Arrays.sort(intervals, Comparator.comparingInt(x -> x.end));\nint end = Integer.MIN_VALUE;\nfor (Interval cur : intervals) {\n    if (cur.start >= end) { answer++; end = cur.end; }\n}',alts:['DP','정렬','우선순위 큐']},
+ backtracking:{category:'완전탐색',algo:'백트래킹 / 완전탐색',confidence:'입력이 작고 모든 조합·순열을 확인해야 할 때',why:'가능한 선택을 재귀적으로 만들되, 정답이 될 수 없는 가지를 즉시 중단하면 작은 입력의 정확한 답을 구할 수 있습니다.',conditions:['N이 작음','순열·조합·부분집합','유효하지 않은 가지를 조기 제거 가능'],complexity:'순열 O(N!), 부분집합 O(2ᴺ), 가지치기에 따라 감소',keywords:'모든 경우, 서로 다른 배치, 조합, N≤10~20',check:'선택→재귀→선택 취소의 대칭과 중복 선택 제거를 확인하세요.',code:'void search(int depth) {\n    if (depth == target) { updateAnswer(); return; }\n    for (int i = 0; i < n; i++) {\n        if (used[i]) continue;\n        used[i] = true; search(depth + 1); used[i] = false;\n    }\n}',alts:['비트마스크','DP','가지치기']},
+ sorting:{category:'정렬',algo:'정렬 / 좌표 압축',confidence:'순서 재배치가 비교와 탐색을 단순화할 때',why:'값이나 여러 기준으로 정렬하면 인접 관계만 확인하거나 탐욕적으로 선택할 수 있고, 큰 좌표를 순위로 압축할 수 있습니다.',conditions:['원래 순서 변경 가능 또는 인덱스 보존 가능','비교 기준 정의 가능','정렬 후 선형 스캔'],complexity:'시간 O(N log N), 공간 구현에 따라 O(N)',keywords:'오름차순, 순위, 가장 가까운 값, 좌표 압축, 여러 기준',check:'Comparator는 빼기로 비교하지 말고 Integer.compare/Long.compare를 사용하세요.',code:'Arrays.sort(items, (a, b) -> {\n    int cmp = Integer.compare(a.first, b.first);\n    return cmp != 0 ? cmp : Integer.compare(a.second, b.second);\n});',alts:['이분 탐색','그리디','스위핑']},
+ stackQueue:{category:'자료구조',algo:'스택 / 큐 / 덱',confidence:'최근 항목, 처리 순서, 양 끝 조작이 핵심일 때',why:'LIFO·FIFO·양 끝 삽입 삭제라는 문제의 처리 순서를 자료구조가 그대로 표현합니다. 단조 스택은 다음 큰/작은 원소도 선형 시간에 찾습니다.',conditions:['괄호·되돌리기·다음 큰 원소','도착 순서대로 처리','양 끝 최솟값 유지'],complexity:'일반적으로 시간 O(N), 공간 O(N)',keywords:'가장 최근, 먼저 들어온, 괄호, 다음 큰 수, 양쪽에서 제거',check:'Java에서는 Stack보다 Deque(ArrayDeque)를 권장하며 null은 넣지 마세요.',code:'Deque<Integer> stack = new ArrayDeque<>();\nfor (int i = 0; i < n; i++) {\n    while (!stack.isEmpty() && a[stack.peek()] < a[i]) {\n        answer[stack.pop()] = a[i];\n    }\n    stack.push(i);\n}',alts:['단조 스택','우선순위 큐','슬라이딩 윈도우']},
+ heap:{category:'자료구조',algo:'우선순위 큐 (Heap)',confidence:'매 순간 최솟값·최댓값을 반복해서 꺼낼 때',why:'원소가 계속 추가되는 동안 가장 작은 값이나 큰 값을 반복 조회·삭제하면 전체를 매번 정렬하지 않고 처리할 수 있습니다.',conditions:['동적 삽입과 최솟값/최댓값 삭제','상위 K개 유지','작업 우선순위'],complexity:'삽입·삭제 O(log N), 조회 O(1), 공간 O(N)',keywords:'가장 작은 것부터, 상위 K개, 작업 스케줄, 중앙값',check:'최대 힙은 Comparator.reverseOrder()를 쓰고 비교 오버플로를 피하세요.',code:'PriorityQueue<Integer> pq = new PriorityQueue<>();\nfor (int value : values) {\n    pq.offer(value);\n    if (pq.size() > k) pq.poll();\n}',alts:['정렬','TreeMap','두 개의 힙']},
+ hash:{category:'자료구조',algo:'HashMap / HashSet',confidence:'값의 존재·빈도·대응 관계를 빠르게 찾을 때',why:'키를 통해 존재 여부, 개수, 마지막 위치 등을 평균 O(1)에 관리해 이중 반복을 제거할 수 있습니다.',conditions:['값→정보 매핑','중복·빈도 계산','빠른 포함 여부 검사'],complexity:'평균 시간 O(N), 공간 O(N)',keywords:'중복, 빈도, 같은 값, 전화번호, 두 수의 합',check:'배열로 충분한 작은 정수 범위인지, 순서가 필요해 TreeMap이 필요한지도 확인하세요.',code:'Map<Integer, Integer> count = new HashMap<>();\nfor (int x : values) count.merge(x, 1, Integer::sum);\nboolean exists = count.containsKey(target);',alts:['정렬','TreeMap','투 포인터']},
+ stringSearch:{category:'문자열',algo:'KMP / 문자열 해싱',confidence:'긴 텍스트에서 패턴을 선형 시간에 찾을 때',why:'패턴의 접두사·접미사 정보를 재사용하면 불일치 때 텍스트 인덱스를 되돌리지 않고 모든 출현 위치를 찾을 수 있습니다.',conditions:['하나의 긴 텍스트와 패턴','정확한 부분 문자열 검색','반복되는 접두사·접미사'],complexity:'KMP 시간 O(N + M), 공간 O(M)',keywords:'문자열 포함, 패턴 등장 횟수, 접두사와 접미사, 반복 문자열',check:'단순 contains로 충분한지, 여러 패턴이면 Trie/Aho-Corasick이 필요한지 구분하세요.',code:'int[] pi = new int[pattern.length()];\nfor (int i = 1, j = 0; i < pattern.length(); i++) {\n    while (j > 0 && pattern.charAt(i) != pattern.charAt(j)) j = pi[j - 1];\n    if (pattern.charAt(i) == pattern.charAt(j)) pi[i] = ++j;\n}',alts:['Trie','Aho-Corasick','문자열 해싱']}
+
 };
 
 const codeExamples={
@@ -1413,8 +1427,11 @@ state:[
 };
 
 const nodes={
- start:{q:'관계·연결·이동·경로·선후관계 문제인가?',hint:'정점과 간선으로 모델링하거나, 격자의 칸을 정점처럼 볼 수 있는지 확인하세요.',a:[['예, 그래프 문제다','목적에 따라 분기','goal'],['아니오','이 웹은 그래프 알고리즘 판단용','nongraph']]},
- nongraph:{q:'그래프가 아니라면 무엇을 먼저 검토할까?',hint:'배열·문자열·DP·그리디·투 포인터·이분 탐색·완전탐색을 검토하세요.',a:[['그래프로 다시 모델링할 수 있다','그래프 목적 분기로 이동','goal'],['처음부터 다시 판단한다','입력 조건을 다시 읽기','start']]},
+ start:{q:'관계·연결·이동·경로·선후관계 문제인가?',hint:'정점과 간선으로 모델링하거나, 격자의 칸을 정점처럼 볼 수 있는지 확인하세요.',a:[['예, 그래프 문제다','목적에 따라 분기','goal'],['아니오','비그래프 유형으로 이동','nongraph']]},
+ nongraph:{q:'그래프가 아니라면 출력해야 하는 것은 무엇인가?',hint:'문제의 소재보다 출력값과 입력 제한을 기준으로 가장 가까운 항목을 고르세요.',a:[['최댓값·최솟값·경우의 수','이전 결과 재사용 여부 확인','optimization'],['배열의 연속 구간·두 값','구간 유형 확인','rangeType'],['정렬된 값 또는 가능한 답의 경계','탐색 범위 절반씩 줄이기','binarySearch!'],['모든 순열·조합·배치','작은 입력 완전탐색','backtracking!'],['중복·빈도·빠른 값 조회','키 기반 자료구조','hash!'],['문자열에서 패턴 찾기','패턴 검색','stringSearch!'],['처리 순서·최솟값 반복 추출','자료구조 선택','dataStructure'],['정렬·순위·좌표 순서','정렬 기반 풀이','sorting!'],['그래프로 모델링할 수 있다','그래프 목적 분기로 이동','goal']]},
+ optimization:{q:'현재 상태의 답을 더 작은 상태의 답으로 표현할 수 있는가?',hint:'dp[i], dp[i][j]처럼 상태를 정의했을 때 같은 계산이 반복되는지 확인하세요.',a:[['예, 이전 상태가 반복된다','최적 부분 구조','dp!'],['아니오, 매 순간 선택하면 된다','선택의 정당성 확인','greedy!'],['모든 선택을 직접 확인해야 한다','입력 크기 확인','backtracking!']]},
+ rangeType:{q:'구간 또는 두 값에 어떤 특징이 있는가?',hint:'연속 여부, 질의 횟수, 정렬 여부가 핵심입니다.',a:[['구간 합 질의가 여러 번 나온다','미리 합 계산','prefixSum!'],['조건을 만족하는 가장 긴·짧은 연속 구간','창을 확장·축소','slidingWindow!'],['정렬 배열의 두 값 또는 양 끝을 이동','두 인덱스 이동','twoPointer!'],['답의 가능 여부가 경계에서 바뀐다','단조성 활용','binarySearch!']]},
+ dataStructure:{q:'어떤 원소를 가장 먼저 꺼내야 하는가?',hint:'문제에서 요구하는 삽입·삭제·조회 순서를 그대로 고르세요.',a:[['가장 작은 값 또는 큰 값','우선순위 처리','heap!'],['가장 최근 값·가장 먼저 온 값·양 끝 값','LIFO/FIFO/Deque','stackQueue!'],['특정 키의 값·빈도·존재 여부','빠른 조회','hash!']]},
  goal:{q:'문제의 가장 직접적인 목표는 무엇인가?',hint:'구현 방법이 아니라 “출력해야 하는 값”을 기준으로 고르세요.',a:[['최소 이동 횟수 또는 최소 비용','최단 경로 분기','shortest'],['모든 정점을 최소 비용으로 연결','전체 연결 비용','mst!'],['모든 정점을 직접 방문하는 경로 최소','전체 방문 순서','tsp!'],['선행 조건을 지키는 순서','작업 순서','topo!'],['같은 집합인지 반복 확인','집합 합치기·연결 질의','uf!'],['단순 방문·도달·그룹 개수','기본 탐색','stateCheck'],['사이클 존재 여부','방향성에 따른 판별','cycle!'],['두 그룹으로 나눌 수 있는지','이분 그래프','bipartite!'],['서로 왕복 가능한 그룹','SCC','scc!'],['제거하면 단절되는 요소','브리지·단절점','bridge!'],['최대 전달량','용량 기반 네트워크','flow!'],['두 그룹을 최대한 많이 짝짓기','매칭','matching!'],['트리의 부모·거리·서브트리·조상','트리 문제','tree!']]},
  stateCheck:{q:'같은 정점이어도 보유 자원이나 이전 선택에 따라 이후 행동이 달라지는가?',hint:'벽 파괴 여부, 쿠폰 사용 횟수, 연료, 방문 집합 등이 대표적입니다.',a:[['예','상태를 추가해야 함','state!'],['아니오','일반 탐색 가능','minNeed']]},
  minNeed:{q:'가중치가 없는 그래프에서 최소 이동 횟수가 필요한가?',hint:'최소 간선 수라면 DFS가 아니라 BFS입니다.',a:[['예','최소 단계 탐색','bfs!'],['아니오','방문·도달·영역 탐색','dfsbfs!']]},
@@ -1443,10 +1460,27 @@ const algorithmCatalog=[
  ['flow','최대 유량','용량 네트워크'],
  ['matching','이분 매칭','최대 짝짓기'],
  ['tree','트리','부모·서브트리·LCA'],
- ['state','상태 확장','다차원 visited/dist']
+ ['state','상태 확장','다차원 visited/dist'],
+ ['binarySearch','이분 탐색','값·정답의 경계','탐색'],
+ ['twoPointer','투 포인터','두 값·연속 구간','배열·구간'],
+ ['slidingWindow','슬라이딩 윈도우','최장·최단 연속 구간','배열·구간'],
+ ['prefixSum','누적 합','반복 구간 질의','배열·구간'],
+ ['dp','Dynamic Programming','상태와 점화식','DP·그리디'],
+ ['greedy','Greedy','지역 최적 선택','DP·그리디'],
+ ['backtracking','백트래킹','순열·조합 완전탐색','완전탐색'],
+ ['sorting','정렬 / 좌표 압축','순서 재배치','정렬'],
+ ['stackQueue','스택 / 큐 / 덱','처리 순서','자료구조'],
+ ['heap','우선순위 큐','최솟값·최댓값 반복','자료구조'],
+ ['hash','HashMap / HashSet','빈도·존재 조회','자료구조'],
+ ['stringSearch','KMP / 문자열 해싱','패턴 검색','문자열']
 ];
+const catalogKinds=['전체','그래프','탐색','배열·구간','DP·그리디','완전탐색','정렬','자료구조','문자열'];
+let selectedCatalogKind='전체';
 function renderCatalog(){
-  $('algoList').innerHTML=algorithmCatalog.map(([key,name,desc])=>`<button class="algo-pick" type="button" data-algo="${key}">${name}<span>${desc}</span></button>`).join('');
+  $('catalogFilters').innerHTML=catalogKinds.map(kind=>`<button class="filter-btn ${kind===selectedCatalogKind?'active':''}" type="button" data-kind="${kind}">${kind}</button>`).join('');
+  const visible=algorithmCatalog.filter(([, , ,kind])=>selectedCatalogKind==='전체'||(kind||'그래프')===selectedCatalogKind);
+  $('algoList').innerHTML=visible.map(([key,name,desc,kind='그래프'])=>`<button class="algo-pick" type="button" data-algo="${key}"><span class="kind">${kind}</span>${name}<span class="desc">${desc}</span></button>`).join('');
+  document.querySelectorAll('[data-kind]').forEach(btn=>btn.addEventListener('click',()=>{selectedCatalogKind=btn.dataset.kind;renderCatalog()}));
   document.querySelectorAll('[data-algo]').forEach(btn=>btn.addEventListener('click',()=>openAlgorithm(btn.dataset.algo)));
 }
 function showHome(){
@@ -1468,6 +1502,7 @@ function startDecision(){
 function openAlgorithm(key){
   history=[];choices=[`알고리즘별 정보 보기: ${results[key]?.algo||key}`];
   $('home').classList.add('hidden');
+  window.history.replaceState?.({},'',`#algo=${key}`);
   showResult(key);
 }
 function render(){
@@ -1488,12 +1523,17 @@ function showResult(key){const r=results[key]||results.dfsbfs;$('home').classLis
 }
 function renderPath(){const p=$('path');if(!choices.length){p.innerHTML='<p class="empty">선택한 답변이 여기에 쌓입니다.</p>';return}p.innerHTML=choices.map((x,i)=>`<span class="crumb">${i+1}. ${x}</span>`).join('')}
 function reset(){document.querySelectorAll('.check input').forEach(x=>x.checked=false);showHome()}
-$('backBtn').addEventListener('click',()=>{if(!history.length)return;current=history.pop();choices.pop();render()});$('resetBtn').addEventListener('click',reset);$('againBtn').addEventListener('click',reset);$('reviewBtn').addEventListener('click',()=>{$('path').scrollIntoView({behavior:'smooth',block:'center'})});$('startDecisionBtn').addEventListener('click',startDecision);$('showCatalogBtn').addEventListener('click',()=>{$('catalogSection').classList.remove('hidden');$('catalogSection').scrollIntoView({behavior:'smooth',block:'center'})});
+$('backBtn').addEventListener('click',()=>{if(!history.length)return;current=history.pop();choices.pop();render()});$('resetBtn').addEventListener('click',reset);$('againBtn').addEventListener('click',reset);$('reviewBtn').addEventListener('click',()=>{$('path').scrollIntoView({behavior:'smooth',block:'center'})});$('startDecisionBtn').addEventListener('click',startDecision);$('showCatalogBtn').addEventListener('click',()=>{window.history.replaceState?.({},'','#catalog');$('catalogSection').classList.remove('hidden');$('catalogSection').scrollIntoView({behavior:'smooth',block:'center'})});
 function openDrawer(){ $('sideDrawer').classList.add('open'); $('drawerBackdrop').classList.add('show'); }
 function closeDrawer(){ $('sideDrawer').classList.remove('open'); $('drawerBackdrop').classList.remove('show'); }
 $('openDrawerBtn').addEventListener('click',openDrawer);$('closeDrawerBtn').addEventListener('click',closeDrawer);$('drawerBackdrop').addEventListener('click',closeDrawer);
 function guide(){const n=Number($('nInput').value||0),m=Number($('mInput').value||0);let t='값을 입력하면 우선 고려 가능한 시간복잡도를 안내합니다.';if(n){if(n<=10)t='N ≤ 10: O(N!) 순열·완전탐색도 가능성을 검토할 수 있습니다.';else if(n<=20)t='N ≤ 20: O(2^N), O(N·2^N) 비트마스크·TSP DP를 검토할 수 있습니다.';else if(n<=100)t='N ≤ 100: O(N³)도 제한 시간에 따라 가능할 수 있습니다.';else if(n<=500)t='N ≤ 500: O(N³)은 주의가 필요하며, Floyd-Warshall 가능 여부를 제한 시간과 함께 판단하세요.';else if(n<=2000)t='N ≤ 2,000: O(N²) 가능성이 있으나 상수와 제한 시간을 확인하세요.';else if(n<=10000)t='N ≤ 10,000: O(N²)은 위험합니다. O(N log N) 또는 O(V+E)를 우선 검토하세요.';else if(n<=100000)t='N ≤ 100,000: O(N log N) 이하를 권장합니다. 그래프라면 O(V+E), 다익스트라, 유니온파인드가 대표적입니다.';else t='N이 매우 큽니다: O(N) 또는 작은 O(N log N)을 목표로 하세요.';if(m)t+=` 현재 V+E ≈ ${(n+m).toLocaleString()}회 단위의 전체 탐색은 유력합니다.`}$('complexityGuide').textContent=t}
-$('nInput').addEventListener('input',guide);$('mInput').addEventListener('input',guide);renderCatalog();showHome();
+function openInitialView(){
+  const algorithm=location.hash.match(/^#algo=([A-Za-z0-9]+)$/)?.[1];
+  if(algorithm&&results[algorithm]){openAlgorithm(algorithm);return;}
+  if(location.hash==='#catalog'){$('catalogSection').classList.remove('hidden');}
+}
+$('nInput').addEventListener('input',guide);$('mInput').addEventListener('input',guide);renderCatalog();showHome();openInitialView();
 </script>
 </body>
 </html>
