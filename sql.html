@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SQL 코딩 테스트 핵심 문법과 실전 예제"><title>SQL 코딩 테스트 문법 노트</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#667085;--line:#dce2eb;--primary:#4f46e5;--soft:#eef2ff;--code:#101827;--shadow:0 14px 34px rgba(16,24,40,.07)}*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:20px}body{margin:0;background:linear-gradient(145deg,#eff2ff,#f7f8fb 30%,#f5f7fb);color:var(--text);font-family:Pretendard,"Noto Sans KR",system-ui,sans-serif}.shell{max-width:1240px;margin:auto;padding:24px 18px 60px}.top{display:flex;justify-content:space-between;gap:22px;align-items:flex-start;margin-bottom:22px}.eyebrow{color:var(--primary);font-size:13px;font-weight:900;letter-spacing:.06em}.top h1{font-size:clamp(30px,5vw,48px);line-height:1.14;margin:7px 0 10px}.lead{max-width:760px;margin:0;color:var(--muted);line-height:1.7}.home{white-space:nowrap;text-decoration:none;color:var(--text);font-weight:800;background:white;border:1px solid var(--line);border-radius:12px;padding:10px 14px}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px}.side{position:sticky;top:18px;align-self:start;background:white;border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.search{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;outline:none}.search:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--soft)}.nav-title{font-size:12px;color:var(--muted);font-weight:900;margin:16px 5px 7px}.toc{display:grid;gap:3px}.toc a{padding:8px 9px;border-radius:9px;color:#3e495d;text-decoration:none;font-size:14px;font-weight:700}.toc a:hover{background:var(--soft);color:var(--primary)}.content{min-width:0}.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}.quick div,.section{background:white;border:1px solid var(--line);box-shadow:var(--shadow)}.quick div{border-radius:15px;padding:15px}.quick strong{display:block;margin-bottom:5px}.quick span{font-size:13px;color:var(--muted);line-height:1.5}.section{border-radius:18px;padding:22px;margin-bottom:14px}.section h2{font-size:23px;margin:0 0 6px}.intro{color:var(--muted);line-height:1.65;margin:0 0 17px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.topic{border:1px solid var(--line);border-radius:14px;padding:15px;min-width:0}.wide{grid-column:1/-1}.topic h3{font-size:16px;margin:0 0 6px}.topic p{font-size:14px;color:var(--muted);line-height:1.55;margin:0 0 11px}.editor{overflow:hidden;border:1px solid #26334a;border-radius:12px;background:var(--code)}.bar{display:flex;align-items:center;justify-content:space-between;padding:8px 11px;background:#172238;border-bottom:1px solid #29364d;color:#aeb9cc;font:12px ui-monospace,monospace}.copy{border:0;border-radius:7px;padding:5px 8px;background:#26344d;color:#d6deeb;font-size:11px;cursor:pointer}.editor pre{margin:0;padding:14px;overflow:auto;color:#d6deeb;font:13px/1.65 "JetBrains Mono",ui-monospace,Consolas,monospace;tab-size:2}.kw{color:#c792ea;font-weight:700}.fn{color:#82aaff}.str{color:#c3e88d}.num{color:#f78c6c}.com{color:#7f8caa;font-style:italic}.op{color:#89ddff}.note{border-left:4px solid #f79009;background:#fffaeb;color:#713b12;border-radius:8px;padding:11px 13px;margin-top:11px;font-size:13px;line-height:1.55}.order{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.order span{padding:7px 9px;border-radius:9px;background:var(--soft);color:#3730a3;font:700 12px ui-monospace,monospace}.order b{align-self:center;color:#98a2b3}.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.checks div{padding:11px;border-radius:11px;background:#f8fafc;border:1px solid #edf0f4;font-size:14px}.empty{display:none;text-align:center;padding:30px;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}@media(max-width:860px){.top{display:block}.home{display:inline-block;margin-top:14px}.layout{display:block}.side{position:static;margin-bottom:14px}.toc{grid-template-columns:repeat(3,1fr)}.quick,.grid{grid-template-columns:1fr}.wide{grid-column:auto}}@media(max-width:520px){.shell{padding:18px 12px 44px}.section{padding:17px}.toc,.checks{grid-template-columns:repeat(2,1fr)}}
+</style></head>
+<body><div class="shell"><header class="top"><div><div class="eyebrow">SQL CODING TEST · CHEAT SHEET</div><h1>SQL 코딩 테스트 문법 노트</h1><p class="lead">조회·집계·조인·순위 문법을 실행 순서와 실전 예제로 빠르게 확인하세요. 예시는 MySQL 8 기준이며 핵심 표준 SQL은 다른 DB에서도 거의 같습니다.</p></div><a class="home" href="index.html">← 알고리즘 도우미</a></header>
+<div class="layout"><aside class="side"><input class="search" id="search" type="search" placeholder="문법 검색 (예: JOIN)" aria-label="SQL 문법 검색"><div class="nav-title">CONTENTS</div><nav class="toc"><a href="#select">조회 기본</a><a href="#aggregate">집계</a><a href="#join">JOIN</a><a href="#subquery">서브쿼리·CTE</a><a href="#window">윈도우 함수</a><a href="#functions">함수·NULL</a><a href="#sets">집합·DML</a><a href="#check">실전 점검</a></nav></aside><main class="content">
+<div class="quick"><div><strong>작성 순서</strong><span>SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT</span></div><div><strong>실행 순서</strong><span>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</span></div><div><strong>가장 흔한 실수</strong><span>NULL을 = 로 비교하거나 LEFT JOIN 조건을 WHERE에 두어 행을 잃는 것</span></div></div>
+
+<section class="section" id="select" data-search="select where distinct order by limit like in between 조회 정렬 조건"><h2>1. 조회 기본</h2><p class="intro">필요한 열과 행을 고른 뒤 정렬하고 개수를 제한합니다.</p><div class="grid"><article class="topic wide"><h3>SELECT · WHERE · ORDER BY</h3><p>여러 정렬 기준은 왼쪽부터 적용됩니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT product_id, product_name, price * 0.9 AS sale_price
+FROM products
+WHERE category IN ('BOOK', 'OFFICE')
+  AND price BETWEEN 10000 AND 50000
+  AND product_name LIKE '%SQL%'
+ORDER BY sale_price DESC, product_id ASC
+LIMIT 10;</pre></div></article><article class="topic"><h3>DISTINCT · CASE</h3><p>중복을 제거하고 조건에 따라 값을 분류합니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT DISTINCT category,
+  CASE
+    WHEN price >= 50000 THEN '고가'
+    WHEN price >= 10000 THEN '일반'
+    ELSE '저가'
+  END AS price_group
+FROM products;</pre></div></article><article class="topic"><h3>조건식과 NULL</h3><p>괄호로 AND/OR 우선순위를 분명히 합니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT * FROM users
+WHERE (grade = 'VIP' OR points >= 1000)
+  AND deleted_at IS NULL
+  AND user_id NOT IN (1, 3, 5);</pre></div></article></div></section>
+
+<section class="section" id="aggregate" data-search="group by having count sum avg min max 집계 그룹"><h2>2. 집계와 그룹</h2><p class="intro">GROUP BY로 행을 그룹화하고 HAVING으로 집계 결과를 거릅니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT category,
+       COUNT(*) AS product_count,
+       COUNT(discount_rate) AS discount_count,
+       ROUND(AVG(price), 0) AS average_price,
+       MAX(price) AS max_price
+FROM products
+WHERE status = 'ON_SALE'
+GROUP BY category
+HAVING COUNT(*) >= 3
+ORDER BY average_price DESC;</pre></div><div class="note"><b>COUNT(*)</b>는 모든 행, <b>COUNT(column)</b>은 NULL이 아닌 값만 셉니다. 집계 결과 조건은 WHERE가 아닌 HAVING에 작성하세요.</div></section>
+
+<section class="section" id="join" data-search="inner left right cross join on self 조인"><h2>3. JOIN</h2><p class="intro">결과에 남겨야 할 기준 테이블을 먼저 결정하고 연결 키를 ON에 씁니다.</p><div class="grid"><article class="topic"><h3>INNER JOIN</h3><p>양쪽에 연결되는 행만 남깁니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT o.order_id, u.name
+FROM orders AS o
+JOIN users AS u
+  ON u.user_id = o.user_id
+WHERE o.status = 'PAID';</pre></div></article><article class="topic"><h3>LEFT JOIN과 그룹</h3><p>왼쪽 모든 행을 유지합니다.</p><div class="editor"><div class="bar">query.sql</div><pre>SELECT u.user_id, COUNT(o.order_id) AS orders
+FROM users AS u
+LEFT JOIN orders AS o
+  ON o.user_id = u.user_id
+ AND o.status = 'PAID'
+GROUP BY u.user_id;</pre></div></article><article class="topic wide"><h3>매칭되지 않은 행 · 셀프 조인</h3><div class="editor"><div class="bar">query.sql</div><pre>-- 주문이 한 번도 없는 사용자
+SELECT u.user_id, u.name
+FROM users AS u
+LEFT JOIN orders AS o ON o.user_id = u.user_id
+WHERE o.order_id IS NULL;
+
+-- 직원과 상사 연결
+SELECT e.name AS employee, m.name AS manager
+FROM employees AS e
+LEFT JOIN employees AS m ON m.employee_id = e.manager_id;</pre></div><div class="note">LEFT JOIN한 오른쪽 테이블의 필터를 WHERE에 쓰면 NULL 행이 사라질 수 있습니다. 연결 조건이라면 ON에 두세요.</div></article></div></section>
+
+<section class="section" id="subquery" data-search="subquery exists correlated cte with 서브쿼리"><h2>4. 서브쿼리와 CTE</h2><p class="intro">중간 결과에 이름을 붙여 복잡한 쿼리를 단계별로 분리합니다.</p><div class="grid"><article class="topic"><h3>EXISTS</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT u.user_id, u.name
+FROM users AS u
+WHERE EXISTS (
+  SELECT 1 FROM orders AS o
+  WHERE o.user_id = u.user_id
+    AND o.status = 'PAID'
+);</pre></div></article><article class="topic"><h3>CTE (WITH)</h3><div class="editor"><div class="bar">query.sql</div><pre>WITH totals AS (
+  SELECT user_id, SUM(amount) AS total
+  FROM orders GROUP BY user_id
+)
+SELECT user_id, total
+FROM totals
+WHERE total >= 100000;</pre></div></article></div></section>
+
+<section class="section" id="window" data-search="window row_number rank dense_rank lag lead partition over 윈도우 순위"><h2>5. 윈도우 함수</h2><p class="intro">행을 합치지 않고 그룹 안의 순위·누적값·이전 값을 계산합니다.</p><div class="grid"><article class="topic wide"><h3>그룹별 상위 N개</h3><div class="editor"><div class="bar">query.sql</div><pre>WITH ranked AS (
+  SELECT product_id, category, price,
+         ROW_NUMBER() OVER (
+           PARTITION BY category
+           ORDER BY price DESC, product_id
+         ) AS rn,
+         DENSE_RANK() OVER (
+           PARTITION BY category ORDER BY price DESC
+         ) AS price_rank
+  FROM products
+)
+SELECT product_id, category, price
+FROM ranked WHERE rn <= 3;</pre></div><div class="note"><b>ROW_NUMBER</b>는 고유 순번, <b>RANK</b>는 공동 순위 뒤 번호를 건너뛰고, <b>DENSE_RANK</b>는 건너뛰지 않습니다.</div></article><article class="topic"><h3>누적 합</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT order_date, amount,
+  SUM(amount) OVER (
+    ORDER BY order_date, order_id
+    ROWS BETWEEN UNBOUNDED PRECEDING
+             AND CURRENT ROW
+  ) AS running_total
+FROM orders;</pre></div></article><article class="topic"><h3>이전 행</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT user_id, order_date,
+  LAG(order_date) OVER (
+    PARTITION BY user_id
+    ORDER BY order_date
+  ) AS previous_order_date
+FROM orders;</pre></div></article></div></section>
+
+<section class="section" id="functions" data-search="null coalesce ifnull string concat substring date_format datediff 문자열 날짜"><h2>6. 문자열·날짜·NULL</h2><p class="intro">함수와 날짜 계산은 DBMS별 차이가 크므로 시험 환경을 먼저 확인하세요.</p><div class="grid"><article class="topic"><h3>NULL · 문자열</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT COALESCE(phone, '없음') AS phone,
+       CONCAT(first_name, ' ', last_name) AS name,
+       UPPER(category),
+       SUBSTRING(phone, 1, 3)
+FROM users
+WHERE email IS NOT NULL;</pre></div></article><article class="topic"><h3>날짜 (MySQL 8)</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT DATE_FORMAT(order_date, '%Y-%m') AS month,
+       DATEDIFF(delivered_at, ordered_at) AS days,
+       DATE_ADD(order_date, INTERVAL 7 DAY) AS due_date
+FROM orders
+WHERE order_date >= '2026-01-01'
+  AND order_date <  '2027-01-01';</pre></div></article></div><div class="note">날짜 열을 함수로 감싸기보다 <b>&gt;= 시작일 AND &lt; 다음 시작일</b>의 반열린 구간으로 비교하면 시간값까지 안전합니다.</div></section>
+
+<section class="section" id="sets" data-search="union union all insert update delete 집합 dml"><h2>7. 집합 연산과 DML</h2><p class="intro">UNION 계열은 위아래 결과의 열 개수와 호환 타입이 같아야 합니다.</p><div class="grid"><article class="topic"><h3>UNION · UNION ALL</h3><div class="editor"><div class="bar">query.sql</div><pre>SELECT user_id FROM buyers
+UNION ALL
+SELECT user_id FROM sellers;
+
+-- UNION은 중복 제거, UNION ALL은 유지</pre></div></article><article class="topic"><h3>INSERT · UPDATE · DELETE</h3><div class="editor"><div class="bar">query.sql</div><pre>INSERT INTO users (name, grade)
+VALUES ('Kim', 'BASIC');
+
+UPDATE users SET grade = 'VIP'
+WHERE user_id = 7;
+
+DELETE FROM users WHERE user_id = 7;</pre></div></article></div></section>
+
+<section class="section" id="check" data-search="실행 순서 체크리스트 팁 오답"><h2>8. 제출 전 점검</h2><p class="intro">경계값과 중복 행 때문에 오답이 되지 않는지 확인하세요.</p><div class="order"><span>FROM · JOIN</span><b>→</b><span>WHERE</span><b>→</b><span>GROUP BY</span><b>→</b><span>HAVING</span><b>→</b><span>SELECT</span><b>→</b><span>ORDER BY</span><b>→</b><span>LIMIT</span></div><div class="checks"><div>✓ 빈 그룹도 출력해야 하는가?</div><div>✓ 1:N JOIN이 행을 중복시키지 않는가?</div><div>✓ COUNT(*)와 COUNT(column)을 구분했는가?</div><div>✓ NULL을 IS NULL로 비교했는가?</div><div>✓ 공동 순위 처리 방식을 확인했는가?</div><div>✓ 정렬 동률의 두 번째 기준이 있는가?</div><div>✓ 날짜 끝 경계를 포함/제외했는가?</div><div>✓ DBMS 버전과 지원 함수를 확인했는가?</div></div></section><div class="empty" id="empty">일치하는 문법이 없습니다. 다른 검색어를 입력해 보세요.</div>
+</main></div><footer>문제에서 사용하는 DBMS(MySQL, Oracle, PostgreSQL 등)의 함수와 문법 차이를 반드시 확인하세요.</footer></div>
+<script>
+const keywords=new Set('SELECT FROM WHERE AND OR NOT IN BETWEEN LIKE IS NULL DISTINCT AS ORDER BY ASC DESC LIMIT OFFSET CASE WHEN THEN ELSE END GROUP HAVING JOIN INNER LEFT RIGHT FULL OUTER CROSS ON WITH EXISTS UNION ALL INSERT INTO VALUES UPDATE SET DELETE OVER PARTITION ROWS RANGE UNBOUNDED PRECEDING FOLLOWING CURRENT ROW INTERVAL'.split(' '));const functions=new Set('COUNT SUM AVG MIN MAX ROUND COALESCE IFNULL CONCAT UPPER LOWER SUBSTRING LENGTH DATE_FORMAT YEAR MONTH DAY DATEDIFF DATE_ADD ROW_NUMBER RANK DENSE_RANK LAG LEAD'.split(' '));const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));function highlight(source){const re=/(?:--[^\n]*|'(?:''|[^'])*'|\b\d+(?:\.\d+)?\b|<>|!=|<=|>=|[=<>+*/%-]|\b[A-Za-z_][A-Za-z0-9_]*\b)/g;let html='',last=0;source.replace(re,(token,offset)=>{html+=esc(source.slice(last,offset));const upper=token.toUpperCase();let cls='';if(token.startsWith('--'))cls='com';else if(token.startsWith("'"))cls='str';else if(/^\d/.test(token))cls='num';else if(keywords.has(upper))cls='kw';else if(functions.has(upper))cls='fn';else if(/^[=<>+*/%-]/.test(token))cls='op';html+=cls?`<span class="${cls}">${esc(token)}</span>`:esc(token);last=offset+token.length;return token});return html+esc(source.slice(last))}document.querySelectorAll('.editor').forEach(editor=>{const pre=editor.querySelector('pre'),source=pre.textContent.trim();pre.innerHTML=highlight(source);const button=document.createElement('button');button.className='copy';button.textContent='복사';button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(source);button.textContent='복사됨';setTimeout(()=>button.textContent='복사',1200)}catch{button.textContent='선택 후 복사'}});editor.querySelector('.bar').appendChild(button)});const search=document.getElementById('search'),sections=[...document.querySelectorAll('.section')],empty=document.getElementById('empty');search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();let shown=0;sections.forEach(s=>{const match=!q||(s.dataset.search+' '+s.textContent).toLowerCase().includes(q);s.hidden=!match;if(match)shown++});empty.style.display=shown?'none':'block'});
+</script></body></html>
