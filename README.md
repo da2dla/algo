@@ -16,12 +16,14 @@ python3 -m http.server 8000
 
 - **유형 찾기**: 질문에 답해 그래프 또는 비그래프 문제의 후보 알고리즘을 좁힙니다.
 - **알고리즘별 정보 보기**: 카테고리로 필터링한 뒤 알고리즘의 조건, 복잡도, Java 예시를 바로 확인합니다.
+- **SQL 문법 노트**: 조회, 집계, JOIN, 서브쿼리, 윈도우 함수 등 SQL 코딩 테스트 핵심 문법과 예시를 검색해 확인합니다.
 
 ## 확인할 화면으로 바로 이동하기
 
 서버를 실행한 뒤 아래 주소를 열면 클릭 과정을 거치지 않고 바로 확인할 수 있습니다.
 
 - 전체 알고리즘 카탈로그: <http://localhost:8000/#catalog>
+- SQL 코딩 테스트 문법 노트: <http://localhost:8000/sql.html>
 - DP 상세 안내: <http://localhost:8000/#algo=dp>
 - 이분 탐색 상세 안내: <http://localhost:8000/#algo=binarySearch>
 - 슬라이딩 윈도우 상세 안내: <http://localhost:8000/#algo=slidingWindow>
