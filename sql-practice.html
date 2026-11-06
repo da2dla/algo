@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SQL 실전 문제 풀이</title>
+  <style>
+    * { box-sizing: border-box }
+    body { margin: 0; background: #f5f7fb; color: #172033; font: 16px/1.6 system-ui, sans-serif }
+    main { max-width: 900px; margin: auto; padding: 24px 18px 60px }
+    h1 { margin: 16px 0 0; font-size: clamp(28px, 5vw, 42px) }
+    h2 { margin: 0 0 8px; font-size: 20px }
+    p { margin: 0 0 14px }
+    a { color: #3730a3 }
+    nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px }
+    nav a { padding: 6px 10px; border-radius: 8px; background: #fff; text-decoration: none; font-weight: 700 }
+    nav a[aria-current="page"] { background: #eef2ff; color: #3730a3 }
+    article { margin-bottom: 14px; padding: 18px; background: #fff; border: 1px solid #dce2eb; border-radius: 16px }
+    summary { cursor: pointer; font-weight: 700; color: #3730a3 }
+    details p { margin: 10px 0 }
+    pre { margin: 10px 0 0; padding: 14px; background: #101827; color: #d6deeb; border-radius: 10px; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px }
+  </style>
+</head>
+<body>
+<main>
+  <nav aria-label="SQL 학습 페이지">
+    <a href="sql.html">문법 노트</a>
+    <a href="sql-practice.html" aria-current="page">실전 문제 풀이</a>
+  </nav>
+  <h1>SQL 실전 문제 풀이</h1>
+  <p>프로그래머스 공개 연습문제 중 JOIN과 집계, 중복 제거, 빈 구간 채우기를 연습할 수 있는 Level 4~5 문제를 골랐습니다. 풀이는 MySQL 8 기준입니다.</p>
+
+  <article>
+    <h2>Level 4 · 저자별 카테고리별 매출액</h2>
+    <p>판매 기록에 도서와 저자 정보를 연결하고, 한 달 동안의 판매량에 단가를 곱해 그룹별로 합산합니다. <a href="https://school.programmers.co.kr/learn/courses/30/lessons/144856">원문 문제</a></p>
+    <details>
+      <summary>풀이 SQL 보기</summary>
+      <p>판매일 범위를 먼저 제한하고 저자와 카테고리를 모두 그룹 기준으로 잡습니다.</p>
+      <pre><code>SELECT a.AUTHOR_ID, a.AUTHOR_NAME, b.CATEGORY,
+       SUM(s.SALES * b.PRICE) AS TOTAL_SALES
+FROM BOOK_SALES AS s
+JOIN BOOK AS b ON b.BOOK_ID = s.BOOK_ID
+JOIN AUTHOR AS a ON a.AUTHOR_ID = b.AUTHOR_ID
+WHERE s.SALES_DATE &gt;= '2022-01-01'
+  AND s.SALES_DATE &lt; '2022-02-01'
+GROUP BY a.AUTHOR_ID, a.AUTHOR_NAME, b.CATEGORY
+ORDER BY a.AUTHOR_ID ASC, b.CATEGORY DESC;</code></pre>
+    </details>
+  </article>
+
+  <article>
+    <h2>Level 4 · 입양 시각 구하기(2)</h2>
+    <p>입양 기록이 없는 시간도 포함해 0시부터 23시까지 건수를 출력합니다. <a href="https://school.programmers.co.kr/learn/courses/30/lessons/59413">원문 문제</a></p>
+    <details>
+      <summary>풀이 SQL 보기</summary>
+      <p>재귀 CTE로 시간 목록을 만든 뒤 집계 결과를 LEFT JOIN합니다. 매칭이 없는 시간은 IFNULL로 0을 채웁니다.</p>
+      <pre><code>WITH RECURSIVE hours AS (
+  SELECT 0 AS hour_of_day
+  UNION ALL
+  SELECT hour_of_day + 1
+  FROM hours
+  WHERE hour_of_day &lt; 23
+), adoptions AS (
+  SELECT HOUR(DATETIME) AS hour_of_day, COUNT(*) AS total
+  FROM ANIMAL_OUTS
+  GROUP BY HOUR(DATETIME)
+)
+SELECT h.hour_of_day AS HOUR, IFNULL(a.total, 0) AS COUNT
+FROM hours AS h
+LEFT JOIN adoptions AS a ON a.hour_of_day = h.hour_of_day
+ORDER BY h.hour_of_day;</code></pre>
+    </details>
+  </article>
+
+  <article>
+    <h2>Level 5 · 상품을 구매한 회원 비율</h2>
+    <p>2021년 가입자 중 실제 구매한 사람의 수와 비율을 구매 연월별로 집계합니다. <a href="https://school.programmers.co.kr/learn/courses/30/lessons/131534">원문 문제</a></p>
+    <details>
+      <summary>풀이 SQL 보기</summary>
+      <p>분모는 2021년 전체 가입자 수로 고정합니다. 분자는 한 사람이 같은 달에 여러 번 구매해도 한 번만 세고, 비율은 소수 첫째 자리까지 표시합니다.</p>
+      <pre><code>WITH cohort AS (
+  SELECT USER_ID
+  FROM USER_INFO
+  WHERE JOINED &gt;= '2021-01-01'
+    AND JOINED &lt; '2022-01-01'
+)
+SELECT YEAR(s.SALES_DATE) AS YEAR, MONTH(s.SALES_DATE) AS MONTH,
+       COUNT(DISTINCT s.USER_ID) AS PURCHASED_USERS,
+       ROUND(COUNT(DISTINCT s.USER_ID) / (SELECT COUNT(*) FROM cohort), 1)
+         AS PUCHASED_RATIO
+FROM ONLINE_SALE AS s
+JOIN cohort AS c ON c.USER_ID = s.USER_ID
+GROUP BY YEAR(s.SALES_DATE), MONTH(s.SALES_DATE)
+ORDER BY YEAR, MONTH;</code></pre>
+    </details>
+  </article>
+</main>
+</body>
+</html>
